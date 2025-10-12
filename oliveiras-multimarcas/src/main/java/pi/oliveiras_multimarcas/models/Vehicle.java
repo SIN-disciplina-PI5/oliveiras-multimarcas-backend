@@ -32,7 +32,7 @@ public class Vehicle {
     @Column(nullable=false)
     private int price;
     @Column(nullable=true)
-    private List<String> url_image;
+    private List<String> url_images;
     @Column(nullable=true)
     private String description;
     @Column(nullable=false)
@@ -40,7 +40,14 @@ public class Vehicle {
     @Column(nullable=false)
     private String mark;
 
-    public Vehicle(){
-        
+    public Vehicle(String model, String year, int price, List<String> url_images, String description, int mileage, String mark){
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        this.url_images = url_images;
+        this.description = description;
+        this.mileage = mileage;
+        this.mark = mark;
     }
+
 }
