@@ -16,7 +16,7 @@ public class VehicleRequestDTO {
     private String model;
     private String year;
     private int price;
-    private List<String> url_image;
+    private List<String> url_images;
     private String description;
     private int mileage;
     private String mark;
