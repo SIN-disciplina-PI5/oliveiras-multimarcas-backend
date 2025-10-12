@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.DTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ import lombok.Setter;
 public class VehicleRequestDTO {
 
     private String model;
-    private String year;
-    private int price;
+    private int year;
+    private BigDecimal price;
     private List<String> url_images;
     private String description;
     private int mileage;
