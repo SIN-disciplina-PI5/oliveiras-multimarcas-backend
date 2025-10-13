@@ -15,7 +15,7 @@ import lombok.Setter;
 public class VehicleRequestDTO {
 
     private String model;
-    private int year;
+    private int modelYear;
     private BigDecimal price;
     private List<String> url_images;
     private String description;

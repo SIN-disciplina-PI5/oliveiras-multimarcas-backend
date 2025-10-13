@@ -6,11 +6,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,11 +36,11 @@ public class Vehicle {
     @Column(nullable=false)
     private String model;
     @Column(nullable=false)
-    private int year;
+    private int modelYear;
     @Column(nullable=false)
     private BigDecimal price;
-    @Column(nullable=true)
-    private List<String> url_images;
+    @OneToMany(mappedBy="vehicle", cascade=CascadeType.ALL)
+    private List<ImageVehicle> url_images = new ArrayList<ImageVehicle>();
     @Column(nullable=true)
     private String description;
     @Column(nullable=false)
@@ -51,10 +53,10 @@ public class Vehicle {
 
         // Ano do carro não deve ser menor que 15 anos do ano atual nem maior que o ano atual
         Calendar now = Calendar.getInstance();
-        if (dto.getYear()<now.get(Calendar.YEAR)-15||dto.getYear()>now.get(Calendar.YEAR)) {
+        if (dto.getModelYear()<now.get(Calendar.YEAR)-15||dto.getModelYear()>now.get(Calendar.YEAR)) {
             throw new InvalidArguments("ano");
         }
-        this.year = dto.getYear();
+        this.modelYear = dto.getModelYear();
 
         // preço do carro não pode ser igual ou menor que zero 
         int compare = dto.getPrice().compareTo(new BigDecimal(0));
@@ -63,10 +65,9 @@ public class Vehicle {
         }
         this.price = dto.getPrice();
         
-        this.url_images = new ArrayList<>();
         for (String url : dto.getUrl_images()) {
-            
-            this.url_images.add(url);
+            ImageVehicle image_url = new ImageVehicle(url, this);
+            this.url_images.add(image_url);
         }
         
         this.description = dto.getDescription();
