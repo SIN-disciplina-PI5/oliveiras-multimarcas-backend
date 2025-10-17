@@ -36,6 +36,7 @@ public class VehicleService {
         return vehicle.get();
     }
 
+    @Transactional
     public Vehicle insert(VehicleRequestDTO dto){
 
         Vehicle vehicle = new Vehicle(dto);
@@ -44,6 +45,7 @@ public class VehicleService {
         return vehicle;
     }
 
+    @Transactional
     public void delete(UUID id){
         if(!vehicleRepository.existsById(id)){
             throw new NoSuchException("Veículo");
@@ -52,6 +54,7 @@ public class VehicleService {
         vehicleRepository.deleteById(id);
     }
 
+    @Transactional
     public Vehicle update(VehicleRequestDTO dto, UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
