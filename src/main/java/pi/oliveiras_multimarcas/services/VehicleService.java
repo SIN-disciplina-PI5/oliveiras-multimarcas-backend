@@ -58,11 +58,13 @@ public class VehicleService {
     public Vehicle update(VehicleRequestDTO dto, UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if(!vehicle.isPresent()){
+        if(vehicle.isEmpty()){
             throw new NoSuchException("Veículo");
         }
         Vehicle newVehicle = new Vehicle(dto);
         newVehicle.setId(id);
+
+        newVehicle = vehicleRepository.save(newVehicle);
         return newVehicle;
 
     }

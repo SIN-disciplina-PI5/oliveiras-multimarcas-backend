@@ -21,7 +21,7 @@ public class VehicleControllers {
     VehicleService vehicleService;
 
     @GetMapping("/")
-    public ResponseEntity<List<VehicleResponseDTO>> findAll(){
+    public ResponseEntity<List<VehicleResponseDTO>> findAll() {
         List<Vehicle> vehicles = vehicleService.findAll();
         List<VehicleResponseDTO> vehiclesResponseDTO = vehicles.stream()
                 .map(VehicleResponseDTO::new)
@@ -31,7 +31,7 @@ public class VehicleControllers {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> findById(@PathVariable UUID id){
+    public ResponseEntity<VehicleResponseDTO> findById(@PathVariable UUID id) {
         Vehicle vehicle;
         try {
             vehicle = vehicleService.findyById(id);
@@ -45,7 +45,7 @@ public class VehicleControllers {
     }
 
     @PostMapping("/")
-    public ResponseEntity<VehicleResponseDTO> insert(@RequestBody VehicleRequestDTO dto){
+    public ResponseEntity<VehicleResponseDTO> insert(@RequestBody VehicleRequestDTO dto) {
 
         Vehicle vehicle = vehicleService.insert(dto);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
@@ -53,12 +53,28 @@ public class VehicleControllers {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteByID(@PathVariable UUID id){
-        try{
+    public ResponseEntity<Void> deleteByID(@PathVariable UUID id) {
+        try {
             vehicleService.delete(id);
         } catch (NoSuchException e) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleResponseDTO> updateById(@PathVariable UUID id, @RequestBody VehicleRequestDTO dto) {
+        Vehicle vehicle;
+
+        try{
+            vehicle = vehicleService.update(dto, id);
+        } catch (NoSuchException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+        VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
+
+        return ResponseEntity.ok().body(vehicleResponseDTO);
+    }
 }
+
