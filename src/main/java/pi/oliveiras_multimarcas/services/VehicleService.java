@@ -29,9 +29,8 @@ public class VehicleService {
     public Vehicle findyById(UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if (!vehicle.isPresent()) {
-            throw new NoSuchException("Veículo");
-        }
+        if (vehicle.isEmpty()) throw new NoSuchException("Veículo");
+
 
         return vehicle.get();
     }
@@ -58,9 +57,8 @@ public class VehicleService {
     public Vehicle update(VehicleRequestDTO dto, UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if(vehicle.isEmpty()){
-            throw new NoSuchException("Veículo");
-        }
+        if(vehicle.isEmpty()) throw new NoSuchException("Veículo");
+
         Vehicle newVehicle = new Vehicle(dto);
         newVehicle.setId(id);
 
