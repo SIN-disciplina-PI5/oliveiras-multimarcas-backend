@@ -2,6 +2,7 @@ package pi.oliveiras_multimarcas.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -34,6 +36,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(UUID id){
         Optional<User> user = userRepositorie.findById(id);
+        if (user.isEmpty()) throw new NoSuchException("Usuario");
+
+        return user.get();
+    }
+
+    public User findByEmail(String email){
+        Optional<User> user = userRepositorie.findByEmail(email);
         if (user.isEmpty()) throw new NoSuchException("Usuario");
 
         return user.get();
