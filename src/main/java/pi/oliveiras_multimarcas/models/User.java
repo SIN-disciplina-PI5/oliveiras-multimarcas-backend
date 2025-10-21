@@ -11,6 +11,7 @@ import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import java.util.UUID;
 
 @Entity
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,8 +20,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Email
     @Column
-    private Email email;
+    private String email;
     @Column
     private String password;
 
