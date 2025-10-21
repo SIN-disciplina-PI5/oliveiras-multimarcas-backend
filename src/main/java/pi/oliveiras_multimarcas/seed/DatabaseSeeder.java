@@ -1,12 +1,16 @@
 package pi.oliveiras_multimarcas.seed;
 
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.models.ImageVehicle;
+import pi.oliveiras_multimarcas.models.User;
 import pi.oliveiras_multimarcas.models.Vehicle;
+import pi.oliveiras_multimarcas.services.UserService;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
 import java.math.BigDecimal;
@@ -19,6 +23,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     VehicleService vehicleService;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public void run(String... args){
@@ -73,6 +80,19 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle3.setMark("Jeep");
 
         vehicleService.insert(vehicle3);
+
+        UserRequestDTO user1 = new UserRequestDTO();
+        user1.setEmail("teste1@gmail.com");
+        user1.setPassword("Senha1234");
+
+        userService.insert(user1);
+
+        UserRequestDTO user2 = new UserRequestDTO();
+        user2.setEmail("teste2@gmail.com");
+        user2.setPassword("S3nh4123");
+
+        userService.insert(user2);
+
     }
 
 }
