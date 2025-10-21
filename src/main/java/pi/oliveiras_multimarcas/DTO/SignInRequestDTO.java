@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignInRequestDTO {
-    private Email email;
+    private String email;
     private String password;
 }
