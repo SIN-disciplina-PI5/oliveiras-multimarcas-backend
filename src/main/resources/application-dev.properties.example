@@ -8,3 +8,9 @@ spring.jpa.hibernate.ddl-auto=update
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
+
+secret_acess=password-secret-acess
+expiration_access=600000
+
+secret_refresh=password-secret-refresh
+expiration_refresh=604800000
