@@ -1,6 +1,7 @@
 package pi.oliveiras_multimarcas.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Token;
@@ -8,6 +9,7 @@ import pi.oliveiras_multimarcas.repositories.TokenRepositorie;
 
 import java.util.Optional;
 
+@Service
 public class TokenService {
 
     @Autowired
