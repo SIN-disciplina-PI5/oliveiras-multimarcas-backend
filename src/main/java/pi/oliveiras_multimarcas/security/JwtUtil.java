@@ -1,13 +1,13 @@
-package pi.oliveiras_multimarcas.security;
+package pi.oliveiras_multimarcas.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,22 +29,24 @@ public class JwtUtil {
         return Algorithm.HMAC256(secretKey);
     }
 
-    public String generateTokenAcess(UUID id){
+    public String generateTokenAcess(UUID id, String email){
         Map<String, Object> claim = Map.of(
                 "id", id.toString()
         );
         return JWT.create()
+                .withSubject(email)
                 .withPayload(claim)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_ACESS))
                 .sign(getAlgorithm(SECRET_ACCESS));
     }
 
-    public String generateTokenRefresh(UUID id){
+    public String generateTokenRefresh(UUID id, String email){
         Map<String, Object> claim = Map.of(
                 "id", id.toString()
         );
         return JWT.create()
+                .withSubject(email)
                 .withPayload(claim)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_REFRESH))
@@ -52,14 +54,35 @@ public class JwtUtil {
     }
 
     public Map<String, Object> extractClaims(String token, String typeToken){
-        String secret = (Objects.equals(typeToken, "acess")) ? SECRET_ACCESS : SECRET_REFRESH;
+        String secret = switch (token) {
+            case "acess" -> SECRET_ACCESS;
+            case "refresh" -> SECRET_REFRESH;
+            default -> throw new InvalidArguments("typeToken");
+        };
         return JWT.require(getAlgorithm(secret)).build().verify(token).getClaims()
                 .entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().as(Object.class)));
     }
 
+    public String extractSubject(String token, String typeToken){
+        String secret = switch (token) {
+            case "acess" -> SECRET_ACCESS;
+            case "refresh" -> SECRET_REFRESH;
+            default -> throw new InvalidArguments("typeToken");
+        };
+        try{
+            return JWT.require(getAlgorithm(secret)).build().verify(token).getSubject();
+        } catch (JWTVerificationException e){
+            return null;
+        }
+    }
+
     public boolean isTokenValid(String token, String typeToken){
-        String secret = (Objects.equals(typeToken, "acess")) ? SECRET_ACCESS : SECRET_REFRESH;
+        String secret = switch (token) {
+            case "acess" -> SECRET_ACCESS;
+            case "refresh" -> SECRET_REFRESH;
+            default -> throw new InvalidArguments("typeToken");
+        };
         try {
             JWT.require(getAlgorithm(secret)).build().verify(token);
             return true;
