@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.config;
+package pi.oliveiras_multimarcas.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
