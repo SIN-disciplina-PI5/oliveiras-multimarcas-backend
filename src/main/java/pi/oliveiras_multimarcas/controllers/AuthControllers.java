@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import pi.oliveiras_multimarcas.services.TokenService;
 import pi.oliveiras_multimarcas.services.UserService;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -59,8 +59,8 @@ public class AuthControllers {
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        String refreshToken = jwtUtil.generateTokenRefresh(user.getId());
-        String acessToken = jwtUtil.generateTokenAcess(user.getId());
+        String refreshToken = jwtUtil.generateTokenRefresh(user.getId(), user.getEmail());
+        String acessToken = jwtUtil.generateTokenAcess(user.getId(), user.getEmail());
         tokenService.insert(refreshToken);
         SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
 
@@ -68,7 +68,10 @@ public class AuthControllers {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader String token){
+    public ResponseEntity<Void> logout(@RequestHeader HttpServletRequest authorization){
+        String authHeader = authorization.getHeader("Authorization");
+        String token = authHeader.substring(7);
+
         try{
             tokenService.deleteByToken(token);
         } catch (NoSuchException e) {
@@ -79,7 +82,9 @@ public class AuthControllers {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestHeader String token){
+    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestHeader HttpServletRequest authorization){
+        String authHeader = authorization.getHeader("Authorization");
+        String token = authHeader.substring(7);
 
         boolean isTokenValid = jwtUtil.isTokenValid(token, "refresh");
         if (!isTokenValid) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -91,7 +96,9 @@ public class AuthControllers {
         Object userId = claim.get("id");
         UUID id = UUID.fromString(userId.toString());
 
-        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id));
+        User user = userService.findById(id);
+
+        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, user.getEmail()));
 
         return ResponseEntity.ok().body(acessToken);
     }
