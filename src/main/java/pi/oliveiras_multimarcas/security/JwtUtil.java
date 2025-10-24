@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.config;
+package pi.oliveiras_multimarcas.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -54,7 +54,7 @@ public class JwtUtil {
     }
 
     public Map<String, Object> extractClaims(String token, String typeToken){
-        String secret = switch (token) {
+        String secret = switch (typeToken) {
             case "acess" -> SECRET_ACCESS;
             case "refresh" -> SECRET_REFRESH;
             default -> throw new InvalidArguments("typeToken");
@@ -65,7 +65,7 @@ public class JwtUtil {
     }
 
     public String extractSubject(String token, String typeToken){
-        String secret = switch (token) {
+        String secret = switch (typeToken) {
             case "acess" -> SECRET_ACCESS;
             case "refresh" -> SECRET_REFRESH;
             default -> throw new InvalidArguments("typeToken");
@@ -78,7 +78,7 @@ public class JwtUtil {
     }
 
     public boolean isTokenValid(String token, String typeToken){
-        String secret = switch (token) {
+        String secret = switch (typeToken) {
             case "acess" -> SECRET_ACCESS;
             case "refresh" -> SECRET_REFRESH;
             default -> throw new InvalidArguments("typeToken");
