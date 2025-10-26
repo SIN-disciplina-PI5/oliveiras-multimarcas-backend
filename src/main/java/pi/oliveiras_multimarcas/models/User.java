@@ -28,7 +28,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
+    @Column
+    private String name;
     @Email
     @Column(unique = true) 
     private String email;
@@ -41,20 +42,9 @@ public class User implements UserDetails {
     private UserPosition position; 
 
     public User(UserRequestDTO dto){
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-        this.position = UserPosition.USER; 
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        
-        if (this.position == UserPosition.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
+        name = dto.getName();
+        email = dto.getEmail();
+        password = dto.getPassword();
     }
 
     @Override
