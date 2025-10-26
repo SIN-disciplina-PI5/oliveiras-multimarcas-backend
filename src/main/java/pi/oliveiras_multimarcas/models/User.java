@@ -20,6 +20,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column
+    private String name;
     @Email
     @Column
     private String email;
@@ -27,6 +29,7 @@ public class User {
     private String password;
 
     public User(UserRequestDTO dto){
+        name = dto.getName();
         email = dto.getEmail();
         password = dto.getPassword();
     }
