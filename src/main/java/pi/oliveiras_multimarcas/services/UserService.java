@@ -18,14 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final UserRepositorie userRepository;
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
-    public UserService(UserRepositorie userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private UserRepositorie userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     /**
      * Busca e retorna todos os usuários cadastrados.
