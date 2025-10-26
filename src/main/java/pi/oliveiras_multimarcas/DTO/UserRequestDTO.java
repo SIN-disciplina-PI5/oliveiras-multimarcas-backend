@@ -32,10 +32,4 @@ public class UserRequestDTO {
      * Número de contato do usuário (telefone, celular, etc.). Este campo é opcional.
      */
     private String contact;
-
-    /**
-     * Perfil de autorização do usuário (ex: 'ADMIN', 'USER'). Não pode ser nulo ou vazio.
-     */
-    @NotBlank(message = "A role não pode estar em branco")
-    private String role;
 }
