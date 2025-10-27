@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
-import pi.oliveiras_multimarcas.models.enums.UserPosition; 
+import pi.oliveiras_multimarcas.models.enums.UserRole; 
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
+    @Column
+    private String name;
     @Email
     @Column(unique = true) 
     private String email;
@@ -36,21 +37,23 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-   
+
+    @Column
+    private String position; 
+
     @Enumerated(EnumType.STRING) 
-    private UserPosition position; 
+    private UserRole role; 
 
     public User(UserRequestDTO dto){
-        this.email = dto.getEmail();
-        this.password = dto.getPassword();
-        this.position = UserPosition.USER; 
+        name = dto.getName(); 
+        email = dto.getEmail();
+        password = dto.getPassword();
+        position = dto.getPosition(); 
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        
-        if (this.position == UserPosition.ADMIN) {
+        if(this.role == UserRole.ADMIN) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         } else {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
