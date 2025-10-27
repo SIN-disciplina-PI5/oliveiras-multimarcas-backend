@@ -39,7 +39,7 @@ public class AuthControllers {
     public ResponseEntity<Void> sigup(@RequestBody UserRequestDTO dto){
 
         try {
-            userService.insert(dto);
+            userService.create(dto);
         } catch (Exception e) {
             ResponseEntity.badRequest().build();
         }
