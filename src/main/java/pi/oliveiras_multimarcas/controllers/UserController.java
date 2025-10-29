@@ -54,9 +54,9 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> insert(@RequestBody UserRequestDTO userRequestDTO) {
         try {
             if (userRequestDTO.getName() == null || userRequestDTO.getEmail() == null || userRequestDTO.getPassword() == null) {
-                return ResponseEntity.badRequest().build()
+                return ResponseEntity.badRequest().build();
             }
-            User user = userService.createUser(userRequestDTO);
+            User user = userService.insert(userResponseDTO);
             UserResponseDTO userResponseDTO = new UserResponseDTO();
             userResponseDTO.setId(user.getId());
             userResponseDTO.setName(user.getName());
@@ -71,7 +71,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
         try {
-            User user = userService.updateUser(id, userRequestDTO);
+            UserResponseDTO user = userService.update(id, userRequestDTO);
             UserResponseDTO userResponseDTO = new UserResponseDTO();
             userResponseDTO.setId(user.getId());
             userResponseDTO.setName(user.getName());
@@ -88,7 +88,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
-            userService.deleteUser(id);
+            userService.delete(id);
             return ResponseEntity.ok().body("Usuário deletado");
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
