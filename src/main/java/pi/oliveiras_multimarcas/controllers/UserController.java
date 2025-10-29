@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import pi.oliveiras_multimarcas.DTO.UserResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
+import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.User;
 import pi.oliveiras_multimarcas.services.UserService;
 
@@ -21,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDTO>> findAll() {
         List<User> users = userService.getAllUsers();
         List<UserResponseDTO> userResponseDTOS = users.stream().map(user -> {
             UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserResponseDTO > findById(@PathVariable UUID id) {
         try {
             User user = userService.getUserById(id);
             UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -43,17 +44,17 @@ public class UserController {
             userResponseDTO.setName(user.getName());
             userResponseDTO.setEmail(user.getEmail());
             userResponseDTO.setPosition(user.getPosition());
-            return ResponseEntity.ok(userResponseDTO);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("Usuário não encontrado");
+            return ResponseEntity.ok().body(userResponseDTO);
+        } catch (NoSuchException e) {
+            return ResponseEntity.status(404).build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> insert(@RequestBody UserRequestDTO userRequestDTO) {
         try {
             if (userRequestDTO.getName() == null || userRequestDTO.getEmail() == null || userRequestDTO.getPassword() == null) {
-                throw new InvalidArguments("Nome, email e senha são obrigatórios");
+                return ResponseEntity.badRequest().build()
             }
             User user = userService.createUser(userRequestDTO);
             UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -63,12 +64,12 @@ public class UserController {
             userResponseDTO.setPosition(user.getPosition());
             return ResponseEntity.status(201).body(userResponseDTO);
         } catch (InvalidArguments e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
         try {
             User user = userService.updateUser(id, userRequestDTO);
             UserResponseDTO userResponseDTO = new UserResponseDTO();
@@ -79,17 +80,17 @@ public class UserController {
             return ResponseEntity.ok(userResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
-        } catch (Exception e) {
+        } catch (NoSuchException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.ok("Usuário excluído com sucesso");
-        } catch (Exception e) {
+            return ResponseEntity.ok().body("Usuário deletado");
+        } catch (NoSuchException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }
