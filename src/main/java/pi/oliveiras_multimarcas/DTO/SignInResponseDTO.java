@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class SignInResponseDTO {
-    private String refreshToken;
-    private String acessToken;
+    private String refreshToken; 
+    private String acessToken;  
 }

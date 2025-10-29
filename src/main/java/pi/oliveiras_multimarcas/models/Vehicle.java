@@ -37,7 +37,7 @@ public class Vehicle {
     private String model;
     @Column(nullable=false)
     private int modelYear;
-    @Column(nullable=false)
+    @Column(nullable=false, precision = 10, scale = 2)
     private BigDecimal price;
     @OneToMany(mappedBy="vehicle", cascade=CascadeType.ALL)
     private List<ImageVehicle> url_images = new ArrayList<ImageVehicle>();

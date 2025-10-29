@@ -6,31 +6,47 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.models.enums.UserRole; 
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class User {
+public class Employee { 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column
     private String name;
     @Email
-    @Column
+    @Column(unique = true) 
     private String email;
+    
     @Column
     private String password;
 
+    @Column
+    private String position; 
+
+    @Enumerated(EnumType.STRING) 
+    private UserRole role; 
+
     public User(UserRequestDTO dto){
-        name = dto.getName();
+        name = dto.getName(); 
         email = dto.getEmail();
         password = dto.getPassword();
+        position = dto.getPosition();
+        role = dto.getRole();
     }
+
 }
