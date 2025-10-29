@@ -1,17 +1,18 @@
 package pi.oliveiras_multimarcas.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.DTO.UserResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.User;
 import pi.oliveiras_multimarcas.repositories.UserRepositorie;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -121,5 +122,9 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword()); // A senha será codificada no método de serviço
         return user;
+    }
+
+    public User findByEmail(String email) {
+        return userRepositorie.findByEmail(email).orElseThrow(() -> new NoSuchException("User not found with email: " + email));
     }
 }
