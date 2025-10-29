@@ -56,7 +56,7 @@ public class UserService {
      * @return Um {@link UserResponseDTO} com os dados do usuário recém-criado.
      */
     @Transactional
-    public UserResponseDTO create(UserRequestDTO dto) {
+    public UserResponseDTO insert(UserRequestDTO dto) {
         User user = toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user = userRepository.save(user);
