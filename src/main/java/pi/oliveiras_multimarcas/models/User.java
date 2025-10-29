@@ -17,13 +17,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class User implements UserDetails { 
+public class Employee { 
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,32 +45,8 @@ public class User implements UserDetails {
         name = dto.getName(); 
         email = dto.getEmail();
         password = dto.getPassword();
-        position = dto.getPosition(); 
+        position = dto.getPosition();
+        role = dto.getRole();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email; 
-    }
-
-    @Override
-    public boolean isAccountNonExpired() { return true; }
-
-    @Override
-    public boolean isAccountNonLocked() { return true; }
-
-    @Override
-    public boolean isCredentialsNonExpired() { return true; }
-
-    @Override
-    public boolean isEnabled() { return true; }
 }
