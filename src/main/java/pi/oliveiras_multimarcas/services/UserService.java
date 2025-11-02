@@ -57,7 +57,7 @@ public class UserService {
      * @return Um {@link UserResponseDTO} com os dados do usuário recém-criado.
      */
     @Transactional
-    public UserResponseDTO create(UserRequestDTO dto) {
+    public UserResponseDTO insert(UserRequestDTO dto) {
         User user = toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user = userRepository.save(user);
@@ -73,7 +73,7 @@ public class UserService {
      * @throws NoSuchException se nenhum usuário for encontrado com o ID fornecido.
      */
     @Transactional
-    public UserResponseDTO update(UUID id, UserRequestDTO dto) {
+    public UserResponseDTO updateById(UUID id, UserRequestDTO dto) {
         userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchException("Usuário"));
 
@@ -92,7 +92,7 @@ public class UserService {
      * @throws NoSuchException se nenhum usuário for encontrado com o ID fornecido.
      */
     @Transactional
-    public void delete(UUID id){
+    public void deleteById(UUID id){
         if(!userRepository.existsById(id)){
             throw new NoSuchException("Usuário");
         }
