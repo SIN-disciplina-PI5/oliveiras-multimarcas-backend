@@ -2,8 +2,10 @@ package pi.oliveiras_multimarcas.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 @Data
 public class EmployeeRequestDTO {
@@ -32,4 +34,13 @@ public class EmployeeRequestDTO {
      * Número de contato do usuário (telefone, celular, etc.). Este campo é opcional.
      */
     private String contact;
+
+    @NotBlank(message = "O cargo não pode estar em branco")
+    private String position;
+
+    /**
+     * Nível de acesso do funcionário.
+     */
+    @NotNull(message = "A role não pode ser nula")
+    private UserRole role;
 }
