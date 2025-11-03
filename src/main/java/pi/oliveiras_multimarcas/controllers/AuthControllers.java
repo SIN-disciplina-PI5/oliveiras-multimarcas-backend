@@ -6,15 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.RefreshTokenResponseDTO;
-import pi.oliveiras_multimarcas.DTO.SignInRequestDTO;
-import pi.oliveiras_multimarcas.DTO.SignInResponseDTO;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.DTO.*;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
-import pi.oliveiras_multimarcas.models.User;
+import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.security.JwtUtil;
 import pi.oliveiras_multimarcas.services.TokenService;
-import pi.oliveiras_multimarcas.services.UserService;
+import pi.oliveiras_multimarcas.services.EmployeeService;
 
 import java.util.Map;
 import java.util.UUID;
@@ -24,7 +21,7 @@ import java.util.UUID;
 public class AuthControllers {
 
     @Autowired
-    private UserService userService;
+    private EmployeeService EmployeeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,10 +33,10 @@ public class AuthControllers {
     private TokenService tokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> sigup(@RequestBody UserRequestDTO dto){
+    public ResponseEntity<Void> sigup(@RequestBody EmployeeRequestDTO dto){
 
         try {
-            userService.create(dto);
+            EmployeeService.insert(dto);
         } catch (Exception e) {
             ResponseEntity.badRequest().build();
         }
@@ -50,17 +47,17 @@ public class AuthControllers {
     @PostMapping("/signin")
     public ResponseEntity<SignInResponseDTO> sigin(@RequestBody SignInRequestDTO dto){
 
-        User user;
+        Employee employee;
         try{
-            user = userService.findByEmail(dto.getEmail());
+            employee = EmployeeService.findByEmail(dto.getEmail());
         } catch (NoSuchException e) {
             return ResponseEntity.notFound().build();
         }
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        String refreshToken = jwtUtil.generateTokenRefresh(user.getId(), user.getEmail());
-        String acessToken = jwtUtil.generateTokenAcess(user.getId(), user.getEmail());
+        String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
+        String acessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
         tokenService.insert(refreshToken);
         SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
 
@@ -96,9 +93,9 @@ public class AuthControllers {
         Object userId = claim.get("id");
         UUID id = UUID.fromString(userId.toString());
 
-        User user = userService.findById(id);
+        EmployeeResponseDTO employee = EmployeeService.findById(id);
 
-        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, user.getEmail()));
+        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
 
         return ResponseEntity.ok().body(acessToken);
     }

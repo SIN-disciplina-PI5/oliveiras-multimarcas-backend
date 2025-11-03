@@ -1,16 +1,13 @@
 package pi.oliveiras_multimarcas.seed;
 
-import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
-import pi.oliveiras_multimarcas.models.ImageVehicle;
 import pi.oliveiras_multimarcas.models.User;
-import pi.oliveiras_multimarcas.models.Vehicle;
-import pi.oliveiras_multimarcas.services.UserService;
+import pi.oliveiras_multimarcas.services.EmployeeService;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
 import java.math.BigDecimal;
@@ -25,7 +22,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     VehicleService vehicleService;
 
     @Autowired
-    UserService userService;
+    EmployeeService userService;
 
     @Override
     public void run(String... args){

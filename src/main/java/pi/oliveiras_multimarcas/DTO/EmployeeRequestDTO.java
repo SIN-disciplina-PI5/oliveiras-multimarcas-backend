@@ -4,10 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
-public class UserRequestDTO {
+public class EmployeeRequestDTO {
 
     /**
      * Nome de usuário único para login. Não pode ser nulo ou vazio.

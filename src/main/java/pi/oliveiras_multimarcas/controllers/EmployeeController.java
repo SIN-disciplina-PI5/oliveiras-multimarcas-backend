@@ -3,12 +3,12 @@ package pi.oliveiras_multimarcas.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
-import pi.oliveiras_multimarcas.DTO.UserResponseDTO;
+import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.DTO.EmployeeResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
-import pi.oliveiras_multimarcas.models.User;
-import pi.oliveiras_multimarcas.services.UserService;
+import pi.oliveiras_multimarcas.models.Employee;
+import pi.oliveiras_multimarcas.services.EmployeeService;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,16 +16,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class EmployeeController {
 
     @Autowired
-    private UserService userService;
+    private EmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
-        List<User> users = userService.getAllUsers();
-        List<UserResponseDTO> userResponseDTOS = users.stream().map(user -> {
-            UserResponseDTO userResponseDTO = new UserResponseDTO();
+    public ResponseEntity<List<EmployeeResponseDTO>> findAll() {
+        List<EmployeeResponseDTO> employees = employeeService.findAll();
+        List<EmployeeResponseDTO> userResponseDTOS = employees.stream().map(user -> {
+            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
             userResponseDTO.setId(user.getId());
             userResponseDTO.setName(user.getName());
             userResponseDTO.setEmail(user.getEmail());
@@ -36,28 +36,28 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO > findById(@PathVariable UUID id) {
+    public ResponseEntity<EmployeeResponseDTO> findById(@PathVariable UUID id) {
         try {
-            User user = userService.getUserById(id);
-            UserResponseDTO userResponseDTO = new UserResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return ResponseEntity.ok().body(userResponseDTO);
+            EmployeeResponseDTO employee = employeeService.findById(id);
+            EmployeeResponseDTO employeeResponse = new EmployeeResponseDTO();
+            employeeResponse.setId(employee.getId());
+            employeeResponse.setName(employee.getName());
+            employeeResponse.setEmail(employee.getEmail());
+            employeeResponse.setPosition(employee.getPosition());
+            return ResponseEntity.ok().body(employeeResponse);
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> insert(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<EmployeeResponseDTO> insert(@RequestBody EmployeeRequestDTO EmployeeRequestDTO) {
         try {
-            if (userRequestDTO.getName() == null || userRequestDTO.getEmail() == null || userRequestDTO.getPassword() == null) {
+            if (EmployeeRequestDTO.getUsername() == null || EmployeeRequestDTO.getEmail() == null || EmployeeRequestDTO.getPassword() == null) {
                 return ResponseEntity.badRequest().build();
             }
-            User user = userService.insert(userResponseDTO);
-            UserResponseDTO userResponseDTO = new UserResponseDTO();
+            EmployeeResponseDTO user = employeeService.insert(EmployeeRequestDTO);
+            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
             userResponseDTO.setId(user.getId());
             userResponseDTO.setName(user.getName());
             userResponseDTO.setEmail(user.getEmail());
@@ -69,10 +69,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody EmployeeRequestDTO employeeRequestDTO) {
         try {
-            UserResponseDTO user = userService.update(id, userRequestDTO);
-            UserResponseDTO userResponseDTO = new UserResponseDTO();
+            EmployeeResponseDTO user = employeeService.updateById(id, employeeRequestDTO);
+            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
             userResponseDTO.setId(user.getId());
             userResponseDTO.setName(user.getName());
             userResponseDTO.setEmail(user.getEmail());
@@ -88,7 +88,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
-            userService.delete(id);
+            employeeService.deleteById(id);
             return ResponseEntity.ok().body("Usuário deletado");
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
