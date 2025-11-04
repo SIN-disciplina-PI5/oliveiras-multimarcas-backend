@@ -16,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class Employee {
 
     @Id
@@ -42,6 +43,7 @@ public class Employee {
         password = dto.getPassword();
         position = dto.getPosition();
         role = dto.getRole();
+        contact = dto.getContact();
     }
 
 }
