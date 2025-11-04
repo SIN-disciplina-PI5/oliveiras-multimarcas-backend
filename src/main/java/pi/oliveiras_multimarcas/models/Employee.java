@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
@@ -36,8 +36,8 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public Employee(UserRequestDTO dto){
-        name = dto.getName();
+    public Employee(EmployeeRequestDTO dto){
+        name = dto.getUsername();
         email = dto.getEmail();
         password = dto.getPassword();
         position = dto.getPosition();
