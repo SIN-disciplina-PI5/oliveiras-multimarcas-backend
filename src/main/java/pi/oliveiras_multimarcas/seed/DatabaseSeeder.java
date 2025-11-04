@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
-import pi.oliveiras_multimarcas.models.User;
 import pi.oliveiras_multimarcas.services.EmployeeService;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
@@ -78,13 +77,13 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         vehicleService.insert(vehicle3);
 
-        UserRequestDTO user1 = new UserRequestDTO();
+        EmployeeRequestDTO user1 = new EmployeeRequestDTO();
         user1.setEmail("teste1@gmail.com");
         user1.setPassword("Senha1234");
 
         userService.insert(user1);
 
-        UserRequestDTO user2 = new UserRequestDTO();
+        EmployeeRequestDTO user2 = new EmployeeRequestDTO();
         user2.setEmail("teste2@gmail.com");
         user2.setPassword("S3nh4123");
 

@@ -34,13 +34,6 @@ public class EmployeeRequestDTO {
      * Número de contato do usuário (telefone, celular, etc.). Este campo é opcional.
      */
     private String contact;
-
-    @NotBlank(message = "O cargo não pode estar em branco")
     private String position;
-
-    /**
-     * Nível de acesso do funcionário.
-     */
-    @NotNull(message = "A role não pode ser nula")
     private UserRole role;
 }

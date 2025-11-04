@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
@@ -16,14 +16,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class Employee {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column
-    private String name;
+    private String username;
     @Email
     @Column(unique = true)
     private String email;
@@ -37,13 +36,11 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public Employee(EmployeeRequestDTO dto){
-        name = dto.getUsername();
+    public Client(UserRequestDTO dto){
+        username = dto.getUsername();
         email = dto.getEmail();
         password = dto.getPassword();
-        position = dto.getPosition();
         role = dto.getRole();
-        contact = dto.getContact();
     }
 
 }
