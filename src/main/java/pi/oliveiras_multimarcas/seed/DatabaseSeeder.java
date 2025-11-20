@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.EmployeeService;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
@@ -80,12 +81,20 @@ public class DatabaseSeeder implements CommandLineRunner {
         EmployeeRequestDTO user1 = new EmployeeRequestDTO();
         user1.setEmail("teste1@gmail.com");
         user1.setPassword("Senha1234");
+        user1.setName("epamilondas");
+        user1.setPosition("vendedor");
+        user1.setContact("081900000000");
+        user1.setRole(UserRole.ADMIN);
 
         userService.insert(user1);
 
         EmployeeRequestDTO user2 = new EmployeeRequestDTO();
         user2.setEmail("teste2@gmail.com");
         user2.setPassword("S3nh4123");
+        user2.setName("Josefa");
+        user2.setPosition("vendedor");
+        user2.setContact("081900000001");
+        user2.setRole(UserRole.ADMIN);
 
         userService.insert(user2);
 
