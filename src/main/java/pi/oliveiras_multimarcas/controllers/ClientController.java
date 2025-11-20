@@ -7,7 +7,7 @@ import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
-import pi.oliveiras_multimarcas.models.client;
+import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.services.ClientService;
 
 import java.util.List;
@@ -29,7 +29,6 @@ public class ClientController {
             clientResponseDTO.setId(client.getId());
             clientResponseDTO.setName(client.getName());
             clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
             return clientResponseDTO;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(clientResponseDTOS);
@@ -43,7 +42,6 @@ public class ClientController {
             clientResponse.setId(client.getId());
             clientResponse.setName(client.getName());
             clientResponse.setEmail(client.getEmail());
-            clientResponse.setPosition(client.getPosition());
             return ResponseEntity.ok().body(clientResponse);
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).build();
@@ -53,7 +51,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<ClientResponseDTO> insert(@RequestBody ClientRequestDTO clientRequestDTO) {
         try {
-            if (clientRequestDTO.getclientname() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
+            if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
                 return ResponseEntity.badRequest().build();
             }
             ClientResponseDTO client = clientService.insert(clientRequestDTO);
@@ -61,7 +59,6 @@ public class ClientController {
             clientResponseDTO.setId(client.getId());
             clientResponseDTO.setName(client.getName());
             clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
             return ResponseEntity.status(201).body(clientResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.badRequest().build();
@@ -76,7 +73,6 @@ public class ClientController {
             clientResponseDTO.setId(client.getId());
             clientResponseDTO.setName(client.getName());
             clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
             return ResponseEntity.ok(clientResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
