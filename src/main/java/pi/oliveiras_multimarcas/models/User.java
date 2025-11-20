@@ -44,18 +44,20 @@ public abstract class User {
 
     @Column // Opcional, por isso sem 'nullable = false'
     private String contact;
-    public User(SignupRequestDTO dto, UserRole role){
+    public User(SignupRequestDTO dto,String contact, UserRole role){
         name = dto.getName();
         email = dto.getEmail();
         password = dto.getPassword();
+        this.contact = contact;
         this.role = role;
     }
 
-    public User(String name, String email, String password, UserRole role){
+    public User(String name, String email, String password, UserRole role, String contact){
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.contact = contact;
     }
 
 }
