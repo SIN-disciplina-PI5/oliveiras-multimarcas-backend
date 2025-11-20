@@ -19,7 +19,7 @@ public class Employee extends User {
     private String position;
 
     public Employee(EmployeeRequestDTO dto){
-        super(dto.getName(), dto.getEmail(), dto.getPassword(), UserRole.ADMIN);
+        super(dto.getName(), dto.getEmail(), dto.getPassword(), UserRole.ADMIN, dto.getContact());
         position = dto.getPosition();
     }
 
