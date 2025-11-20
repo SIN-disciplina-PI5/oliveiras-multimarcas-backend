@@ -11,13 +11,12 @@ import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Client extends User{
 
-    public Client(SignupRequestDTO dto){
-        super(dto, UserRole.USER);
+    public Client(SignupRequestDTO dto, String contact){
+        super(dto,contact, UserRole.USER);
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
@@ -15,15 +16,14 @@ import java.util.UUID;
 @Setter
 public class ClientResponseDTO {
     private UUID id;
-    
     private String name; 
     private String email;
     private UserRole role; 
 
-    public ClientResponseDTO(Employee employee) {
-        this.id = employee.getId();
-        this.name = employee.getName();
-        this.email = employee.getEmail();
-        this.role = employee.getRole();
+    public ClientResponseDTO(Client client) {
+        this.id = client.getId();
+        this.name = client.getName();
+        this.email = client.getEmail();
+        this.role = client.getRole();
     }
 }
