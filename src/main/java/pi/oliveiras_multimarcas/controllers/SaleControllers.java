@@ -15,69 +15,49 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
-public class SaleController {
+@RequestMapping("/sales")
+public class SaleControllers {
 
     @Autowired
-    private SaleService employeeService;
+    private SaleService saleService;
 
     @GetMapping
-    public ResponseEntity<List<EmployeeResponseDTO>> findAll() {
-        List<EmployeeResponseDTO> employees = employeeService.findAll();
-        List<EmployeeResponseDTO> userResponseDTOS = employees.stream().map(user -> {
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return userResponseDTO;
-        }).collect(Collectors.toList());
-        return ResponseEntity.ok(userResponseDTOS);
+    public ResponseEntity<List<SaleResponseDTO>> findAll() {
+        List<Sale> employees = saleService.findAll();
+        List<SaleResponseDTO> saleResponseDTOS = employees.stream().map(SaleResponseDTO::new).toList();
+        return ResponseEntity.ok(saleResponseDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<SaleResponseDTO> findById(@PathVariable UUID id) {
         try {
-            EmployeeResponseDTO employee = employeeService.findById(id);
-            EmployeeResponseDTO employeeResponse = new EmployeeResponseDTO();
-            employeeResponse.setId(employee.getId());
-            employeeResponse.setName(employee.getName());
-            employeeResponse.setEmail(employee.getEmail());
-            employeeResponse.setPosition(employee.getPosition());
-            return ResponseEntity.ok().body(employeeResponse);
+            Sale sale = saleService.findById(id);
+            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+
+            return ResponseEntity.ok().body(saleResponse);
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> insert(@RequestBody EmployeeRequestDTO EmployeeRequestDTO) {
+    public ResponseEntity<SaleResponseDTO> insert(@RequestBody SaleRequestDTO dto) {
         try {
-            if (EmployeeRequestDTO.getUsername() == null || EmployeeRequestDTO.getEmail() == null || EmployeeRequestDTO.getPassword() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            EmployeeResponseDTO user = employeeService.insert(EmployeeRequestDTO);
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return ResponseEntity.status(201).body(userResponseDTO);
+            Sale sale = saleService.insert(dto);
+            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+            return ResponseEntity.status(201).body(saleResponse);
         } catch (InvalidArguments e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody EmployeeRequestDTO employeeRequestDTO) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody SaleRequestDTO dto) {
         try {
-            EmployeeResponseDTO user = employeeService.updateById(id, employeeRequestDTO);
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return ResponseEntity.ok(userResponseDTO);
+            Sale sale = saleService.updateById(id, dto);
+            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+
+            return ResponseEntity.ok(saleResponse);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
         } catch (NoSuchException e) {
@@ -88,7 +68,7 @@ public class SaleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable UUID id) {
         try {
-            employeeService.deleteById(id);
+            saleService.deleteById(id);
             return ResponseEntity.ok().body("Usuário deletado");
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");

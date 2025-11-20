@@ -12,38 +12,26 @@ import pi.oliveiras_multimarcas.services.EmployeeService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
-public class EmployeeController {
+@RequestMapping("/employes")
+public class EmployeeControllers {
 
     @Autowired
     private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDTO>> findAll() {
-        List<EmployeeResponseDTO> employees = employeeService.findAll();
-        List<EmployeeResponseDTO> userResponseDTOS = employees.stream().map(user -> {
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return userResponseDTO;
-        }).collect(Collectors.toList());
+        List<Employee> employees = employeeService.findAll();
+        List<EmployeeResponseDTO> userResponseDTOS = employees.stream().map(EmployeeResponseDTO::new).toList();
         return ResponseEntity.ok(userResponseDTOS);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeResponseDTO> findById(@PathVariable UUID id) {
         try {
-            EmployeeResponseDTO employee = employeeService.findById(id);
-            EmployeeResponseDTO employeeResponse = new EmployeeResponseDTO();
-            employeeResponse.setId(employee.getId());
-            employeeResponse.setName(employee.getName());
-            employeeResponse.setEmail(employee.getEmail());
-            employeeResponse.setPosition(employee.getPosition());
+            Employee employee = employeeService.findById(id);
+            EmployeeResponseDTO employeeResponse = new EmployeeResponseDTO(employee);
             return ResponseEntity.ok().body(employeeResponse);
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).build();
@@ -53,16 +41,12 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> insert(@RequestBody EmployeeRequestDTO EmployeeRequestDTO) {
         try {
-            if (EmployeeRequestDTO.getUsername() == null || EmployeeRequestDTO.getEmail() == null || EmployeeRequestDTO.getPassword() == null) {
+            if (EmployeeRequestDTO.getName() == null || EmployeeRequestDTO.getEmail() == null || EmployeeRequestDTO.getPassword() == null) {
                 return ResponseEntity.badRequest().build();
             }
-            EmployeeResponseDTO user = employeeService.insert(EmployeeRequestDTO);
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
-            return ResponseEntity.status(201).body(userResponseDTO);
+            Employee employee = employeeService.insert(EmployeeRequestDTO);
+            EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO(employee);
+            return ResponseEntity.status(201).body(employeeResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.badRequest().build();
         }
@@ -71,12 +55,8 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody EmployeeRequestDTO employeeRequestDTO) {
         try {
-            EmployeeResponseDTO user = employeeService.updateById(id, employeeRequestDTO);
-            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO();
-            userResponseDTO.setId(user.getId());
-            userResponseDTO.setName(user.getName());
-            userResponseDTO.setEmail(user.getEmail());
-            userResponseDTO.setPosition(user.getPosition());
+            Employee employee = employeeService.updateById(id, employeeRequestDTO);
+            EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO(employee);
             return ResponseEntity.ok(userResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());

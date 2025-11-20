@@ -7,12 +7,11 @@ import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
-import pi.oliveiras_multimarcas.models.client;
+import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.services.ClientService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/clients")
@@ -23,27 +22,16 @@ public class ClientController {
 
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> findAll() {
-        List<ClientResponseDTO> clients = clientService.findAll();
-        List<ClientResponseDTO> clientResponseDTOS = clients.stream().map(client -> {
-            ClientResponseDTO clientResponseDTO = new ClientResponseDTO();
-            clientResponseDTO.setId(client.getId());
-            clientResponseDTO.setName(client.getName());
-            clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
-            return clientResponseDTO;
-        }).collect(Collectors.toList());
+        List<Client> clients = clientService.findAll();
+        List<ClientResponseDTO> clientResponseDTOS = clients.stream().map(ClientResponseDTO::new).toList();
         return ResponseEntity.ok(clientResponseDTOS);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id) {
         try {
-            ClientResponseDTO client = clientService.findById(id);
-            ClientResponseDTO clientResponse = new ClientResponseDTO();
-            clientResponse.setId(client.getId());
-            clientResponse.setName(client.getName());
-            clientResponse.setEmail(client.getEmail());
-            clientResponse.setPosition(client.getPosition());
+            Client client = clientService.findById(id);
+            ClientResponseDTO clientResponse = new ClientResponseDTO(client);
             return ResponseEntity.ok().body(clientResponse);
         } catch (NoSuchException e) {
             return ResponseEntity.status(404).build();
@@ -53,15 +41,11 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<ClientResponseDTO> insert(@RequestBody ClientRequestDTO clientRequestDTO) {
         try {
-            if (clientRequestDTO.getclientname() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
+            if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
                 return ResponseEntity.badRequest().build();
             }
-            ClientResponseDTO client = clientService.insert(clientRequestDTO);
-            ClientResponseDTO clientResponseDTO = new ClientResponseDTO();
-            clientResponseDTO.setId(client.getId());
-            clientResponseDTO.setName(client.getName());
-            clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
+            Client client = clientService.insert(clientRequestDTO);
+            ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
             return ResponseEntity.status(201).body(clientResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.badRequest().build();
@@ -71,12 +55,8 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody ClientRequestDTO ClientRequestDTO) {
         try {
-            ClientResponseDTO client = clientService.updateById(id, ClientRequestDTO);
-            ClientResponseDTO clientResponseDTO = new ClientResponseDTO();
-            clientResponseDTO.setId(client.getId());
-            clientResponseDTO.setName(client.getName());
-            clientResponseDTO.setEmail(client.getEmail());
-            clientResponseDTO.setPosition(client.getPosition());
+            Client client = clientService.updateById(id, ClientRequestDTO);
+            ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
             return ResponseEntity.ok(clientResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
