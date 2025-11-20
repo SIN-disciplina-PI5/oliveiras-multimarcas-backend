@@ -29,7 +29,7 @@ public class AppointmentResponseDTO {
         this.vehicleId = appointment.getVehicle().getId();
         this.vehicleModel = appointment.getVehicle().getModel();
         this.clientId = appointment.getClient().getId();
-        this.clientName = appointment.getClient().getUsername();
+        this.clientName = appointment.getClient().getName();
         this.schedulingDate = appointment.getSchedulingDate();
         this.schedulingTime = appointment.getSchedulingTime();
         this.description = appointment.getDescription();
