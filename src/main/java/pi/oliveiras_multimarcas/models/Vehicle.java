@@ -86,4 +86,12 @@ public class Vehicle {
         }
         this.modelYear = modelYear;
     }
+
+    public void setPrice(BigDecimal price){
+        int compare = price.compareTo(new BigDecimal(0));
+        if ( compare == -1 || compare == 0) {
+            throw new InvalidArguments("preço");
+        }
+        this.price = price;
+    }
 }

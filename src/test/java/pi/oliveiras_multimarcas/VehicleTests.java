@@ -65,4 +65,20 @@ public class VehicleTests {
         assertEquals(modelYear, vehicle.getModelYear());
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"89000.00", "100000.00", "114000.00", "0.00", "-89.00"})
+    public void shoulThrowExceptionForPriceInvalid(String priceParam){
+        BigDecimal price = new BigDecimal(priceParam);
+        Vehicle vehicle = new Vehicle();
+        int compare = price.compareTo(new BigDecimal(0));
+        if ( compare == -1 || compare == 0) {
+            assertThrows(InvalidArguments.class,()->{
+                vehicle.setPrice(price);
+            });
+            return;
+        }
+        vehicle.setPrice(price);
+        assertEquals(price, vehicle.getPrice());
+    }
+
 }
