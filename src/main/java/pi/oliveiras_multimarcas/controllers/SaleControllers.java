@@ -12,7 +12,6 @@ import pi.oliveiras_multimarcas.services.SaleService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sales")
