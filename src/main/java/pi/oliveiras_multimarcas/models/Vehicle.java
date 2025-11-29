@@ -71,8 +71,8 @@ public class Vehicle {
         }
 
         this.description = dto.getDescription();
-        // Quilometragem não pode ser negativa
-        if(dto.getMileage()<0){
+        // Quilometragem não pode ser igual ou menor que 0
+        if(dto.getMileage()<=0){
             throw new InvalidArguments("quilometragem");
         }
         this.mileage = dto.getMileage();
@@ -93,5 +93,12 @@ public class Vehicle {
             throw new InvalidArguments("preço");
         }
         this.price = price;
+    }
+
+    public void setMileage(int mileage) {
+        if(mileage<=0){
+            throw new InvalidArguments("quilometragem");
+        }
+        this.mileage = mileage;
     }
 }

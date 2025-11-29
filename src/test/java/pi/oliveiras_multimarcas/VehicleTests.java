@@ -67,7 +67,7 @@ public class VehicleTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"89000.00", "100000.00", "114000.00", "0.00", "-89.00"})
-    public void shoulThrowExceptionForPriceInvalid(String priceParam){
+    public void shouldThrowExceptionForPriceInvalid(String priceParam){
         BigDecimal price = new BigDecimal(priceParam);
         Vehicle vehicle = new Vehicle();
         int compare = price.compareTo(new BigDecimal(0));
@@ -81,4 +81,17 @@ public class VehicleTests {
         assertEquals(price, vehicle.getPrice());
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {-50, 0, 300, 500, 800})
+    public void shouldThrowExceptionForMileageInvalid(int mileage) {
+        Vehicle vehicle = new Vehicle();
+        if (mileage <= 0) {
+            assertThrows(InvalidArguments.class, () -> {
+                vehicle.setMileage(mileage);
+            });
+            return;
+        }
+        vehicle.setMileage(mileage);
+        assertEquals(mileage, vehicle.getMileage());
+    }
 }
