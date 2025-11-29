@@ -1,13 +1,16 @@
 package pi.oliveiras_multimarcas;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import org.junit.jupiter.params.provider.ValueSource;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -42,6 +45,24 @@ public class VehicleTests {
             VehicleRequestDTO dto = new VehicleRequestDTO(model, year, price, urls, description, mileage, mark);
             new Vehicle(dto);
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2014, 2024, 2013, 2018, 2028})
+    public void shouldThrowExceptionForModelYearInvalid(int modelYear){
+
+        Vehicle vehicle = new Vehicle();
+
+        Calendar now = Calendar.getInstance();
+        // se o ano for maior que o atual e 15 anos mais antigo
+        if(modelYear>now.get(Calendar.YEAR) || modelYear<now.get(Calendar.YEAR)-15){
+            assertThrows(InvalidArguments.class, ()-> {
+                vehicle.setModelYear(modelYear);
+            });
+            return;
+        }
+        vehicle.setModelYear(modelYear);
+        assertEquals(modelYear, vehicle.getModelYear());
     }
 
 }

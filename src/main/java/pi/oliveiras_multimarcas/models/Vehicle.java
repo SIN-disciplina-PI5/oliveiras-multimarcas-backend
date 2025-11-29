@@ -79,4 +79,11 @@ public class Vehicle {
         this.mark = dto.getMark();
     }
 
+    public void setModelYear(int modelYear){
+        Calendar now = Calendar.getInstance();
+        if (modelYear<now.get(Calendar.YEAR)-15||modelYear>now.get(Calendar.YEAR)) {
+            throw new InvalidArguments("ano");
+        }
+        this.modelYear = modelYear;
+    }
 }
