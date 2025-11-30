@@ -20,6 +20,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <jacoco.it.argLine></jacoco.it.argLine>
     </properties>
 
     <dependencies>
@@ -129,18 +130,21 @@
                     </execution>
 
                     <!-- Ativa JaCoCo nos testes de integração -->
+                    <!-- Agente para TESTES DE INTEGRAÇÃO -->
                     <execution>
-                        <id>prepare-agent-integration</id>
-                        <phase>pre-integration-test</phase>
+                        <id>jacoco-prepare-agent-integration</id>
                         <goals>
-                            <goal>prepare-agent-integration</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>jacoco.it.argLine</propertyName>
+                        </configuration>
                     </execution>
 
                     <!-- Gera relatório final unificado -->
                     <execution>
-                        <id>report</id>
-                        <phase>post-integration-test</phase>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -161,6 +165,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.2.5</version>
+                <configuration>
+                    <argLine>${jacoco.it.argLine}</argLine>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

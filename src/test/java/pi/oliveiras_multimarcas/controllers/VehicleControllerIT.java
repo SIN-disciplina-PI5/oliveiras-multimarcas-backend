@@ -11,8 +11,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -96,5 +95,137 @@ public class VehicleControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.model").value("Corolla Altis Hybrid"));
+    }
+
+    @Test
+    public void shouldNotFoundVehicle() throws Exception{
+
+        mockMvc.perform(
+                get("/vehicles/"+UUID.randomUUID())
+        )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldDeleteVehicleById() throws Exception{
+        String json = """
+            {
+                "model": "Corolla Altis Hybrid",
+                "modelYear": 2020,
+                "price": 145000.00,
+                "url_images": [
+                    "https://example.com/images/corolla_altis_front.jpg",
+                    "https://example.com/images/corolla_altis_side.jpg",
+                    "https://example.com/images/corolla_altis_interior.jpg"
+                ],
+                "description": "Versão híbrida do Corolla, unindo eficiência energética e conforto premium.",
+                "mileage": 21000,
+                "mark": "Toyota"
+            }
+        """;
+
+        MvcResult result = mockMvc.perform(
+                        post("/vehicles/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
+
+        mockMvc.perform(
+                delete("/vehicles/"+id)
+        )
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldNotFoundInDeleteVehicleById() throws Exception{
+        mockMvc.perform(
+                delete("/vehicles/"+UUID.randomUUID())
+        )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldUpdtadeVehicleById() throws Exception{
+        String json = """
+            {
+                "model": "Corolla Altis Hybrid",
+                "modelYear": 2020,
+                "price": 145000.00,
+                "url_images": [
+                    "https://example.com/images/corolla_altis_front.jpg",
+                    "https://example.com/images/corolla_altis_side.jpg",
+                    "https://example.com/images/corolla_altis_interior.jpg"
+                ],
+                "description": "Versão híbrida do Corolla, unindo eficiência energética e conforto premium.",
+                "mileage": 21000,
+                "mark": "Toyota"
+            }
+        """;
+
+        MvcResult result = mockMvc.perform(
+                        post("/vehicles/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
+
+        String newJson = """
+            {
+                "model": "Corolla Altis Hybrid",
+                "modelYear": 2022,
+                "price": 145000.00,
+                "url_images": [
+                    "https://example.com/images/corolla_altis_front.jpg",
+                    "https://example.com/images/corolla_altis_side.jpg",
+                    "https://example.com/images/corolla_altis_interior.jpg"
+                ],
+                "description": "Versão híbrida do Corolla, unindo eficiência energética e conforto premium.",
+                "mileage": 21000,
+                "mark": "Toyota"
+            }
+        """;
+
+        mockMvc.perform(
+                put("/vehicles/"+id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newJson)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.modelYear").value(2022));
+    }
+
+    @Test
+    public void shouldNotFoundInUpdateVehicleById() throws Exception{
+        String json = """
+            {
+                "model": "Corolla Altis Hybrid",
+                "modelYear": 2020,
+                "price": 145000.00,
+                "url_images": [
+                    "https://example.com/images/corolla_altis_front.jpg",
+                    "https://example.com/images/corolla_altis_side.jpg",
+                    "https://example.com/images/corolla_altis_interior.jpg"
+                ],
+                "description": "Versão híbrida do Corolla, unindo eficiência energética e conforto premium.",
+                "mileage": 21000,
+                "mark": "Toyota"
+            }
+        """;
+
+        mockMvc.perform(
+                put("/vehicles/"+UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+                .andExpect(status().isNotFound());
     }
 }
