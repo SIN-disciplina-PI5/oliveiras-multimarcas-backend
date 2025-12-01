@@ -71,12 +71,34 @@ public class Vehicle {
         }
 
         this.description = dto.getDescription();
-        // Quilometragem não pode ser negativa
-        if(dto.getMileage()<0){
+        // Quilometragem não pode ser igual ou menor que 0
+        if(dto.getMileage()<=0){
             throw new InvalidArguments("quilometragem");
         }
         this.mileage = dto.getMileage();
         this.mark = dto.getMark();
     }
 
+    public void setModelYear(int modelYear){
+        Calendar now = Calendar.getInstance();
+        if (modelYear<now.get(Calendar.YEAR)-15||modelYear>now.get(Calendar.YEAR)) {
+            throw new InvalidArguments("ano");
+        }
+        this.modelYear = modelYear;
+    }
+
+    public void setPrice(BigDecimal price){
+        int compare = price.compareTo(new BigDecimal(0));
+        if ( compare == -1 || compare == 0) {
+            throw new InvalidArguments("preço");
+        }
+        this.price = price;
+    }
+
+    public void setMileage(int mileage) {
+        if(mileage<=0){
+            throw new InvalidArguments("quilometragem");
+        }
+        this.mileage = mileage;
+    }
 }

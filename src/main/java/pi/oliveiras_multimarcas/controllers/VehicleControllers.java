@@ -3,12 +3,14 @@ package pi.oliveiras_multimarcas.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,11 +46,16 @@ public class VehicleControllers {
     }
 
     @PostMapping("/")
-    public ResponseEntity<VehicleResponseDTO> insert(@RequestBody VehicleRequestDTO dto) {
+    public ResponseEntity<VehicleResponseDTO> insert(@RequestBody VehicleRequestDTO dto, UriComponentsBuilder uriBuilder) {
 
         Vehicle vehicle = vehicleService.insert(dto);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
-        return ResponseEntity.ok().body(vehicleResponseDTO);
+
+        URI uri = uriBuilder
+                .path("/vehicles/{id}")
+                .buildAndExpand(vehicleResponseDTO.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(vehicleResponseDTO);
     }
 
     @DeleteMapping("/{id}")

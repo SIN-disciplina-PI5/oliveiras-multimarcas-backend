@@ -1,13 +1,16 @@
-package pi.oliveiras_multimarcas;
+package pi.oliveiras_multimarcas.unit;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import org.junit.jupiter.params.provider.ValueSource;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -44,4 +47,51 @@ public class VehicleTests {
         });
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {2014, 2024, 2013, 2018, 2028})
+    public void shouldThrowExceptionForModelYearInvalid(int modelYear){
+
+        Vehicle vehicle = new Vehicle();
+
+        Calendar now = Calendar.getInstance();
+        // se o ano for maior que o atual e 15 anos mais antigo
+        if(modelYear>now.get(Calendar.YEAR) || modelYear<now.get(Calendar.YEAR)-15){
+            assertThrows(InvalidArguments.class, ()-> {
+                vehicle.setModelYear(modelYear);
+            });
+            return;
+        }
+        vehicle.setModelYear(modelYear);
+        assertEquals(modelYear, vehicle.getModelYear());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"89000.00", "100000.00", "114000.00", "0.00", "-89.00"})
+    public void shouldThrowExceptionForPriceInvalid(String priceParam){
+        BigDecimal price = new BigDecimal(priceParam);
+        Vehicle vehicle = new Vehicle();
+        int compare = price.compareTo(new BigDecimal(0));
+        if ( compare == -1 || compare == 0) {
+            assertThrows(InvalidArguments.class,()->{
+                vehicle.setPrice(price);
+            });
+            return;
+        }
+        vehicle.setPrice(price);
+        assertEquals(price, vehicle.getPrice());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-50, 0, 300, 500, 800})
+    public void shouldThrowExceptionForMileageInvalid(int mileage) {
+        Vehicle vehicle = new Vehicle();
+        if (mileage <= 0) {
+            assertThrows(InvalidArguments.class, () -> {
+                vehicle.setMileage(mileage);
+            });
+            return;
+        }
+        vehicle.setMileage(mileage);
+        assertEquals(mileage, vehicle.getMileage());
+    }
 }
