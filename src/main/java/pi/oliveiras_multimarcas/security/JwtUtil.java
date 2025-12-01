@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
-    @Value("${secret_acess}")
+    @Value("${secret_access}")
     private String SECRET_ACCESS;
 
-    @Value("${expiration_acess}")
+    @Value("${expiration_access}")
     private long EXPIRATION_ACESS;
 
     @Value("${secret_refresh}")
