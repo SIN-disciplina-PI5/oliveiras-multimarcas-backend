@@ -1,31 +1,26 @@
 package pi.oliveiras_multimarcas.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import pi.oliveiras_multimarcas.models.User; 
-import pi.oliveiras_multimarcas.models.enums.UserRole; 
+import lombok.Data;
+import pi.oliveiras_multimarcas.models.User;
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class UserResponseDTO {
     private UUID id;
-    
-    private String name; 
+    private String name;
     private String email;
-    private String position; 
-    private UserRole role; 
+    private UserRole role; // Mantivemos o Role (Permissão)
 
+    // Construtor vazio (obrigatório para JSON/Lombok)
+    public UserResponseDTO() {}
+
+    // Construtor que converte User -> DTO
     public UserResponseDTO(User user) {
         this.id = user.getId();
-        this.name = user.getName(); 
+        this.name = user.getName();
         this.email = user.getEmail();
-        this.position = user.getPosition(); 
-        this.role = user.getRole(); 
+        this.role = user.getRole();
     }
 }

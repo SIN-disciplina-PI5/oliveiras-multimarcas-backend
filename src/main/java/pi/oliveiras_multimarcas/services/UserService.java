@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
+import pi.oliveiras_multimarcas.DTO.UserRequestDTO; // Ajuste se seu DTO tiver outro nome
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.User;
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.repositories.UserRepositorie;
 
 import java.util.List;
@@ -23,9 +24,12 @@ public class UserService {
 
     @Transactional
     public User insert(UserRequestDTO dto){
-
-        User user = new User(dto);
-
+        // AGORA ISSO FUNCIONA: Podemos dar 'new User' porque removemos o abstract
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setRole(UserRole.USER); // Define um padrão ou pegue do DTO
+        
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         user = userRepositorie.save(user);
@@ -50,7 +54,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> findAll(){
-
         return userRepositorie.findAll();
     }
 

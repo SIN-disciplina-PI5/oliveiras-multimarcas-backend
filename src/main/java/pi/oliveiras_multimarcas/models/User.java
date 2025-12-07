@@ -2,51 +2,48 @@ package pi.oliveiras_multimarcas.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import pi.oliveiras_multimarcas.DTO.UserRequestDTO;
-import pi.oliveiras_multimarcas.models.enums.UserRole; 
+import pi.oliveiras_multimarcas.DTO.UserRequestDTO; // Certifique-se que este DTO existe ou use o SignupRequestDTO
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity // MUDAMOS DE @MappedSuperclass PARA @Entity
+@Table(name = "tb_users") // Damos um nome para a tabela
 @Getter
 @Setter
-public class Employee { 
-    
+@NoArgsConstructor
+// REMOVEMOS A PALAVRA 'ABSTRACT'
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column
+
+    @Column(nullable = false)
     private String name;
+
     @Email
-    @Column(unique = true) 
+    @Column(unique = true, nullable = false)
     private String email;
-    
-    @Column
+
+    @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     @Column
-    private String position; 
+    private String contact;
 
-    @Enumerated(EnumType.STRING) 
-    private UserRole role; 
-
-    public User(UserRequestDTO dto){
-        name = dto.getName(); 
-        email = dto.getEmail();
-        password = dto.getPassword();
-        position = dto.getPosition();
-        role = dto.getRole();
+    // Construtor utilitário para facilitar os testes e o Service
+    public User(String name, String email, String password, UserRole role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
-
 }
