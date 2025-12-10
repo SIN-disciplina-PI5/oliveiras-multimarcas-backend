@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
+import pi.oliveiras_multimarcas.repositories.AppointmentRepository; // Importação Necessária
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 
 import java.util.UUID;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class ClientControllerIT {
 
     @Autowired
@@ -32,22 +33,27 @@ public class ClientControllerIT {
     private ClientRepository clientRepository;
 
     @Autowired
+    private AppointmentRepository appointmentRepository; // Injeção para limpeza de dados
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
+        // A ordem é CRUCIAL: Primeiro apaga os filhos (Agendamentos) para não dar erro de FK
+        appointmentRepository.deleteAll();
         clientRepository.deleteAll();
     }
 
     @AfterEach
     void tearDown() {
+        appointmentRepository.deleteAll();
         clientRepository.deleteAll();
     }
 
     @Test
     @DisplayName("GET /clients - Deve retornar lista de clientes quando existirem registros")
     void findAll_ShouldReturnList_WhenClientsExist() throws Exception {
-        // Arrange
         Client client = new Client();
         client.setName("Test Client");
         client.setEmail("test@email.com");
@@ -55,7 +61,6 @@ public class ClientControllerIT {
         client.setRole(UserRole.USER);
         clientRepository.save(client);
 
-        // Act & Assert
         mockMvc.perform(get("/clients"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +81,6 @@ public class ClientControllerIT {
     @Test
     @DisplayName("GET /clients/{id} - Deve retornar cliente quando ID existir")
     void findById_ShouldReturnClient_WhenIdExists() throws Exception {
-        // Arrange
         Client client = new Client();
         client.setName("Test Client");
         client.setEmail("test@email.com");
@@ -84,7 +88,6 @@ public class ClientControllerIT {
         client.setRole(UserRole.USER);
         Client savedClient = clientRepository.save(client);
 
-        // Act & Assert
         mockMvc.perform(get("/clients/{id}", savedClient.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedClient.getId().toString()))
@@ -101,22 +104,19 @@ public class ClientControllerIT {
     @Test
     @DisplayName("POST /clients - Deve retornar 201 para payload válido e verificar criptografia")
     void insert_ShouldReturn201_WhenPayloadIsValid() throws Exception {
-        // Arrange
         ClientRequestDTO requestDTO = new ClientRequestDTO();
         requestDTO.setUsername("New Client");
         requestDTO.setEmail("new@email.com");
         requestDTO.setPassword("secret123");
         requestDTO.setRole(UserRole.USER);
 
-        // Act
         mockMvc.perform(post("/clients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("New Client"))
                 .andExpect(jsonPath("$.email").value("new@email.com"));
 
-        // Assert Persistence & Encryption
         Client savedClient = clientRepository.findByEmail("new@email.com").orElseThrow();
         assertNotEquals("secret123", savedClient.getPassword(), "A senha deve estar criptografada");
         assertEquals("New Client", savedClient.getName());
@@ -125,61 +125,62 @@ public class ClientControllerIT {
     @Test
     @DisplayName("POST /clients - Deve retornar 400 se faltar username, email ou password")
     void insert_ShouldReturn400_WhenRequiredFieldsMissing() throws Exception {
-        // Missing Username
+        // Caso 1: Falta Username
         ClientRequestDTO noName = new ClientRequestDTO();
         noName.setEmail("valid@email.com");
         noName.setPassword("password");
+        noName.setRole(UserRole.USER); // Adicionado para garantir que o erro é só do username
 
         mockMvc.perform(post("/clients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(noName)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(noName)))
                 .andExpect(status().isBadRequest());
 
-        // Missing Email
+        // Caso 2: Falta Email
         ClientRequestDTO noEmail = new ClientRequestDTO();
         noEmail.setUsername("User");
         noEmail.setPassword("password");
+        noEmail.setRole(UserRole.USER); // Adicionado para garantir que o erro é só do email
 
         mockMvc.perform(post("/clients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(noEmail)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(noEmail)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("POST /clients - Deve retornar 400 para email inválido")
     void insert_ShouldReturn400_WhenEmailIsInvalid() throws Exception {
-        // Note: Assuming Controller has validation enabled for @Email
         ClientRequestDTO invalidEmail = new ClientRequestDTO();
         invalidEmail.setUsername("User");
-        invalidEmail.setEmail("invalid-email"); // No @ or domain
+        invalidEmail.setEmail("invalid-email");
         invalidEmail.setPassword("password");
+        invalidEmail.setRole(UserRole.USER); // Importante: Role válida para isolar erro de email
 
         mockMvc.perform(post("/clients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidEmail)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidEmail)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("POST /clients - Deve retornar 400 para senha curta")
     void insert_ShouldReturn400_WhenPasswordIsShort() throws Exception {
-        // Note: Assuming Controller has validation enabled for @Size
         ClientRequestDTO shortPass = new ClientRequestDTO();
         shortPass.setUsername("User");
         shortPass.setEmail("valid@email.com");
-        shortPass.setPassword("123"); // Min is 5
+        shortPass.setPassword("123");
+        shortPass.setRole(UserRole.USER); // Importante: Role válida para isolar erro de senha
 
         mockMvc.perform(post("/clients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(shortPass)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(shortPass)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("PUT /clients/{id} - Deve retornar 200 e atualizar cliente válido")
     void updateById_ShouldReturn200_WhenValid() throws Exception {
-        // Arrange
         Client client = new Client();
         client.setName("Old Name");
         client.setEmail("old@email.com");
@@ -193,15 +194,13 @@ public class ClientControllerIT {
         updateDTO.setPassword("newpass");
         updateDTO.setRole(UserRole.USER);
 
-        // Act
         mockMvc.perform(put("/clients/{id}", saved.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Name"))
                 .andExpect(jsonPath("$.email").value("updated@email.com"));
 
-        // Assert DB
         Client updated = clientRepository.findById(saved.getId()).get();
         assertEquals("Updated Name", updated.getName());
     }
@@ -213,17 +212,20 @@ public class ClientControllerIT {
         updateDTO.setUsername("Name");
         updateDTO.setEmail("email@test.com");
         updateDTO.setPassword("password");
+        // ADICIONE ESTA LINHA: Define uma role válida
+        updateDTO.setRole(UserRole.USER);
 
+        // Agora o objeto é válido, então o Spring deixa passar para o Controller,
+        // que vai procurar o ID, não achar, e retornar 404 (sucesso do teste).
         mockMvc.perform(put("/clients/{id}", UUID.randomUUID())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("DELETE /clients/{id} - Deve retornar 200 ao deletar cliente existente")
     void deleteById_ShouldReturn200_WhenIdExists() throws Exception {
-        // Arrange
         Client client = new Client();
         client.setName("To Delete");
         client.setEmail("delete@email.com");
@@ -231,12 +233,10 @@ public class ClientControllerIT {
         client.setRole(UserRole.USER);
         Client saved = clientRepository.save(client);
 
-        // Act
         mockMvc.perform(delete("/clients/{id}", saved.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Usuário deletado"));
 
-        // Assert
         assertFalse(clientRepository.existsById(saved.getId()));
     }
 
