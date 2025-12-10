@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -20,7 +21,8 @@
 
     <properties>
         <java.version>21</java.version>
-        <jacoco.it.argLine></jacoco.it.argLine>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -104,8 +106,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -157,9 +157,7 @@
 
                     <execution>
                         <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
+                        <goals><goal>prepare-agent</goal></goals>
                     </execution>
 
                     <execution>
@@ -175,11 +173,8 @@
                     <execution>
                         <id>jacoco-report</id>
                         <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
+                        <goals><goal>report</goal></goals>
                     </execution>
-
                 </executions>
             </plugin>
 
@@ -188,7 +183,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
         </plugins>
     </build>
 

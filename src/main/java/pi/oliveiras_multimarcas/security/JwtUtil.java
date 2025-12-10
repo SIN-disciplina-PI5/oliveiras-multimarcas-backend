@@ -1,4 +1,5 @@
 package pi.oliveiras_multimarcas.security;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
+
     @Value("${secret_access}")
     private String SECRET_ACCESS;
 
@@ -33,6 +35,7 @@ public class JwtUtil {
         Map<String, Object> claim = Map.of(
                 "id", id.toString()
         );
+
         return JWT.create()
                 .withSubject(email)
                 .withPayload(claim)
@@ -45,6 +48,7 @@ public class JwtUtil {
         Map<String, Object> claim = Map.of(
                 "id", id.toString()
         );
+
         return JWT.create()
                 .withSubject(email)
                 .withPayload(claim)
@@ -54,41 +58,73 @@ public class JwtUtil {
     }
 
     public Map<String, Object> extractClaims(String token, String typeToken){
-        String secret = switch (typeToken) {
-            case "acess" -> SECRET_ACCESS;
-            case "refresh" -> SECRET_REFRESH;
-            default -> throw new InvalidArguments("typeToken");
-        };
-        return JWT.require(getAlgorithm(secret)).build().verify(token).getClaims()
-                .entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().as(Object.class)));
+
+        String secret;
+
+        if ("acess".equals(typeToken)) {
+            secret = SECRET_ACCESS;
+        } else if ("refresh".equals(typeToken)) {
+            secret = SECRET_REFRESH;
+        } else {
+            throw new InvalidArguments("typeToken");
+        }
+
+        return JWT.require(getAlgorithm(secret))
+                .build()
+                .verify(token)
+                .getClaims()
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().as(Object.class)
+                ));
     }
 
     public String extractSubject(String token, String typeToken){
-        String secret = switch (typeToken) {
-            case "acess" -> SECRET_ACCESS;
-            case "refresh" -> SECRET_REFRESH;
-            default -> throw new InvalidArguments("typeToken");
-        };
-        try{
-            return JWT.require(getAlgorithm(secret)).build().verify(token).getSubject();
+
+        String secret;
+
+        if ("acess".equals(typeToken)) {
+            secret = SECRET_ACCESS;
+        } else if ("refresh".equals(typeToken)) {
+            secret = SECRET_REFRESH;
+        } else {
+            throw new InvalidArguments("typeToken");
+        }
+
+        try {
+            return JWT.require(getAlgorithm(secret))
+                    .build()
+                    .verify(token)
+                    .getSubject();
+
         } catch (JWTVerificationException e){
             return null;
         }
     }
 
     public boolean isTokenValid(String token, String typeToken){
-        String secret = switch (typeToken) {
-            case "acess" -> SECRET_ACCESS;
-            case "refresh" -> SECRET_REFRESH;
-            default -> throw new InvalidArguments("typeToken");
-        };
+
+        String secret;
+
+        if ("acess".equals(typeToken)) {
+            secret = SECRET_ACCESS;
+        } else if ("refresh".equals(typeToken)) {
+            secret = SECRET_REFRESH;
+        } else {
+            throw new InvalidArguments("typeToken");
+        }
+
         try {
-            JWT.require(getAlgorithm(secret)).build().verify(token);
+            JWT.require(getAlgorithm(secret))
+                    .build()
+                    .verify(token);
+
             return true;
+
         } catch (JWTVerificationException e) {
             return false;
         }
     }
-
 }
