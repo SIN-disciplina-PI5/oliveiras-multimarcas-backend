@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
-import pi.oliveiras_multimarcas.services.EmployeeService;
+import pi.oliveiras_multimarcas.services.EmployeeService; // Importação correta
 import pi.oliveiras_multimarcas.services.VehicleService;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     VehicleService vehicleService;
 
     @Autowired
-    EmployeeService userService;
+    EmployeeService userService; // Mantive o nome 'userService', mas o tipo é EmployeeService
 
     @Override
     public void run(String... args){
@@ -97,7 +97,5 @@ public class DatabaseSeeder implements CommandLineRunner {
         user2.setRole(UserRole.ADMIN);
 
         userService.insert(user2);
-
     }
-
 }
