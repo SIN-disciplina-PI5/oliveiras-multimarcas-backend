@@ -40,9 +40,10 @@ public class AuthControllers {
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody EmployeeRequestDTO dto) {
         try {
+            // Agora usamos o employeeService diretamente
             employeeService.insert(dto);
         } catch (Exception e) {
-            ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok().build();
     }
@@ -52,9 +53,13 @@ public class AuthControllers {
 
         Employee employee;
         Client client;
+        
+        // Tenta logar primeiro como Funcionário
         try{
             employee = employeeService.findByEmail(dto.getEmail());
-            if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
 
             String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
             String acessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
@@ -62,10 +67,14 @@ public class AuthControllers {
             SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
 
             return ResponseEntity.ok().body(signInResponseDTO);
+        
         } catch (NoSuchException e) {
+            // Se não achar funcionário, tenta como Cliente
             try{
                 client = clientService.findByEmail(dto.getEmail());
-                if (!passwordEncoder.matches(dto.getPassword(), client.getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                if (!passwordEncoder.matches(dto.getPassword(), client.getPassword())) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
 
                 String refreshToken = jwtUtil.generateTokenRefresh(client.getId(), client.getEmail());
                 String acessToken = jwtUtil.generateTokenAcess(client.getId(), client.getEmail());
@@ -82,6 +91,9 @@ public class AuthControllers {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader HttpServletRequest authorization){
         String authHeader = authorization.getHeader("Authorization");
+        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().build();
+        }
         String token = authHeader.substring(7);
 
         try{
@@ -96,6 +108,9 @@ public class AuthControllers {
     @PostMapping("/refresh")
     public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestHeader HttpServletRequest authorization) {
         String authHeader = authorization.getHeader("Authorization");
+        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String token = authHeader.substring(7);
 
         boolean isTokenValid = jwtUtil.isTokenValid(token, "refresh");
@@ -108,16 +123,13 @@ public class AuthControllers {
         Object userId = claim.get("id");
         UUID id = UUID.fromString(userId.toString());
 
-        Employee employee;
-        Client client;
         try{
-            employee = employeeService.findById(id);
+            Employee employee = employeeService.findById(id);
             RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
-
             return ResponseEntity.ok().body(acessToken);
         } catch (NoSuchException e){
             try{
-                client = clientService.findById(id);
+                Client client = clientService.findById(id);
                 RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, client.getEmail()));
                 return ResponseEntity.ok().body(acessToken);
             }catch (NoSuchException j){
