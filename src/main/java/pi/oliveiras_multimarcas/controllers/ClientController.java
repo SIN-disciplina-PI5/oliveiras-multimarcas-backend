@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponseDTO> insert(@RequestBody ClientRequestDTO clientRequestDTO) {
+    public ResponseEntity<ClientResponseDTO> insert(@RequestBody @Valid ClientRequestDTO clientRequestDTO) {
         try {
             if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
                 return ResponseEntity.badRequest().build();
@@ -53,7 +54,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody ClientRequestDTO ClientRequestDTO) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody @Valid ClientRequestDTO ClientRequestDTO) {
         try {
             Client client = clientService.updateById(id, ClientRequestDTO);
             ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
