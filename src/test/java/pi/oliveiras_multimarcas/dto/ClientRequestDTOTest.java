@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 
 import java.util.Set;
 
@@ -28,7 +29,9 @@ class ClientRequestDTOTest {
         dto.setEmail("teste@teste.com");
         dto.setPassword("senha123");
         dto.setContact("81999999999");
-        dto.setRole(null); 
+        dto.setRole(null);
+
+        dto.setRole(pi.oliveiras_multimarcas.models.enums.UserRole.USER);
 
         Set<ConstraintViolation<ClientRequestDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty(), "DTO deveria ser válido");
