@@ -1,6 +1,7 @@
 package pi.oliveiras_multimarcas.controllers;
 
 import com.jayway.jsonpath.JsonPath;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false) // Desabilita filtros de segurança (JWT) para focar na lógica do controlador
+@Transactional
 public class AppointmentControllerIT {
 
     @Autowired
