@@ -2,7 +2,6 @@ package pi.oliveiras_multimarcas.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 @Data
 public class SignupRequestDTO {

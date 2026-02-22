@@ -1,6 +1,5 @@
 package pi.oliveiras_multimarcas.DTO;
 
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

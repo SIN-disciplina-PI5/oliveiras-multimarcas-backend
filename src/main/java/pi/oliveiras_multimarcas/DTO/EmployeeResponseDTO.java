@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.models.Employee;
-import pi.oliveiras_multimarcas.models.Employee;
-import pi.oliveiras_multimarcas.models.enums.UserRole; 
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
 

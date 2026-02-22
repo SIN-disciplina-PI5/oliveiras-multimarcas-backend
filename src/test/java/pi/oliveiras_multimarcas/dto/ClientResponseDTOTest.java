@@ -1,6 +1,7 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import org.junit.jupiter.api.Test;
+import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
