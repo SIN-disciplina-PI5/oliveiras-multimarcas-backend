@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody AppointmentRequestDTO dto) {
+    public ResponseEntity<?> create(@Valid @RequestBody AppointmentRequestDTO dto) {
         try {
             AppointmentResponseDTO newAppointment = appointmentService.createAppointment(dto);
             // Retorna 201 Created com a localização do novo recurso
@@ -71,3 +72,4 @@ public class AppointmentController {
         }
     }
 }
+   

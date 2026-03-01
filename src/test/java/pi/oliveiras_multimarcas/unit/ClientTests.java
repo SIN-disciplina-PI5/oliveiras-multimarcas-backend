@@ -1,9 +1,10 @@
-package pi.oliveiras_multimarcas.models;
+package pi.oliveiras_multimarcas.unit; 
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import pi.oliveiras_multimarcas.DTO.SignupRequestDTO;
+import pi.oliveiras_multimarcas.models.Client; 
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 public class ClientTests {
@@ -30,7 +31,6 @@ public class ClientTests {
         assertEquals(UserRole.USER, client.getRole());
     }
 
-    // ESTE É O NOVO TESTE
     @Test
     void deveAlterarNomeDoClient() {
         SignupRequestDTO dto = new SignupRequestDTO();

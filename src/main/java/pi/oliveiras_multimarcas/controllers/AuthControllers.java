@@ -1,6 +1,7 @@
 package pi.oliveiras_multimarcas.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class AuthControllers {
     private TokenService tokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody EmployeeRequestDTO dto) {
+    public ResponseEntity<Void> signup(@Valid @RequestBody EmployeeRequestDTO dto) {
         try {
             // Agora usamos o employeeService diretamente
             employeeService.insert(dto);
@@ -49,7 +50,7 @@ public class AuthControllers {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponseDTO> signin(@RequestBody SignInRequestDTO dto){
+    public ResponseEntity<SignInResponseDTO> signin(@Valid @RequestBody SignInRequestDTO dto){
 
         Employee employee;
         Client client;
