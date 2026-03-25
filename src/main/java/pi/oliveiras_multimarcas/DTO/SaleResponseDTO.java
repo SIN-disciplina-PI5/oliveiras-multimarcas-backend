@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Sale;
-import pi.oliveiras_multimarcas.models.Sale;
 import pi.oliveiras_multimarcas.models.Vehicle;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
-
 import java.util.Date;
 import java.util.UUID;
 

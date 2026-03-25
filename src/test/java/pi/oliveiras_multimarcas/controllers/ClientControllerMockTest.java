@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.ClientService;
@@ -61,7 +60,6 @@ public class ClientControllerMockTest {
         clientMock.setId(UUID.randomUUID());
         clientMock.setName("Mock Teste");
         
-        ClientResponseDTO responseDTO = new ClientResponseDTO(clientMock);
 
         // Simulando o serviço
         when(clientService.insert(any(ClientRequestDTO.class))).thenReturn(clientMock);

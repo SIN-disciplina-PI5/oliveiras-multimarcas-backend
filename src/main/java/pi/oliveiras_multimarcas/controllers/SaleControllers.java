@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class SaleControllers {
     }
 
     @PostMapping
-    public ResponseEntity<SaleResponseDTO> insert(@RequestBody SaleRequestDTO dto) {
+    public ResponseEntity<SaleResponseDTO> insert(@Valid @RequestBody SaleRequestDTO dto) {
         try {
             Sale sale = saleService.insert(dto);
             SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
@@ -51,7 +52,7 @@ public class SaleControllers {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody SaleRequestDTO dto) {
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @Valid @RequestBody SaleRequestDTO dto) {
         try {
             Sale sale = saleService.updateById(id, dto);
             SaleResponseDTO saleResponse = new SaleResponseDTO(sale);

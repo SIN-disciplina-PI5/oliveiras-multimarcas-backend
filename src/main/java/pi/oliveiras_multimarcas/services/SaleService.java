@@ -1,7 +1,6 @@
 package pi.oliveiras_multimarcas.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
@@ -23,7 +22,7 @@ public class SaleService {
     @Autowired
     private SaleRepository SaleRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     @Transactional(readOnly = true)
     public List<Sale> findAll(){
