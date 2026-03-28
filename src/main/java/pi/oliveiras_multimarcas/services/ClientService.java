@@ -5,14 +5,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
