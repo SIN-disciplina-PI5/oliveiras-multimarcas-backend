@@ -63,7 +63,7 @@ public class AuthControllers {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader HttpServletRequest authorization){
+    public ResponseEntity<Void> logout( HttpServletRequest authorization){
         String authHeader = authorization.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().build();
@@ -76,7 +76,7 @@ public class AuthControllers {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestHeader HttpServletRequest authorization) {
+    public ResponseEntity<RefreshTokenResponseDTO> refreshToken( HttpServletRequest authorization) {
         String authHeader = authorization.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
