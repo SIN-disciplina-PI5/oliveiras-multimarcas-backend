@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
@@ -37,7 +37,7 @@ public class VehicleControllers {
         Vehicle vehicle;
         try {
             vehicle = vehicleService.findyById(id);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
 
@@ -63,7 +63,7 @@ public class VehicleControllers {
     public ResponseEntity<Void> deleteByID(@PathVariable UUID id) {
         try {
             vehicleService.delete(id);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
@@ -75,7 +75,7 @@ public class VehicleControllers {
 
         try{
             vehicle = vehicleService.update(dto, id);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
 

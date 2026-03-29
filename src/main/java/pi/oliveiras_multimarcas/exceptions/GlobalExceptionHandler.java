@@ -3,25 +3,26 @@ package pi.oliveiras_multimarcas.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@RestControllerAdvice // Indica que esta classe irá "aconselhar" os Controladores REST
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(NoSuchException.class)
-    public ResponseEntity<ApiErrorResponse> handleNoSuchException(
-            NoSuchException ex,
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(
+            EntityNotFoundException ex,
             HttpServletRequest request) {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse(
                 HttpStatus.NOT_FOUND,
-                ex.getMessage(), // Mensagem que você definiu (ex: "Agendamento não localizado")
+                ex.getMessage(),
                 request.getRequestURI()
         );
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(InvalidArguments.class)
@@ -31,11 +32,38 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST,
-                ex.getMessage(), // Mensagem que você definiu (ex: "Parâmetro inválido: preço")
+                ex.getMessage(),
                 request.getRequestURI()
         );
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
+            AuthenticationException ex,
+            HttpServletRequest request) {
+
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Erro de autenticação",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiErrorResponse> handleRuntimeException(
+            RuntimeException ex,
+            HttpServletRequest request) {
+
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Erro interno no servidor",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
 }

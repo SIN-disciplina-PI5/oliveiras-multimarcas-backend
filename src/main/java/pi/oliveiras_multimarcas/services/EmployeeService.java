@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.repositories.EmployeeRepository;
 
@@ -29,7 +29,7 @@ public class EmployeeService {
     @Transactional(readOnly = true)
     public Employee findById(UUID id){
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new NoSuchException("Usuário"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
         return employee;
     }
 
@@ -45,7 +45,7 @@ public class EmployeeService {
     @Transactional
     public Employee updateById(UUID id, EmployeeRequestDTO dto) {
         employeeRepository.findById(id)
-                .orElseThrow(() -> new NoSuchException("Usuário"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
 
         Employee employee = toEntity(dto);
         employee.setId(id);
@@ -59,14 +59,14 @@ public class EmployeeService {
     @Transactional
     public void deleteById(UUID id){
         if(!employeeRepository.existsById(id)){
-            throw new NoSuchException("Usuário");
+            throw new EntityNotFoundException("Usuário");
         }
         employeeRepository.deleteById(id);
     }
 
     public Employee findByEmail(String email){
         return employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchException("Usuário"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
     }
 
     private Employee toEntity(EmployeeRequestDTO dto) {

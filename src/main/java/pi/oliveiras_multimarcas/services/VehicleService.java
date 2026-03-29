@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
 
@@ -29,7 +29,7 @@ public class VehicleService {
     public Vehicle findyById(UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if (vehicle.isEmpty()) throw new NoSuchException("Veículo");
+        if (vehicle.isEmpty()) throw new EntityNotFoundException("Veículo");
 
 
         return vehicle.get();
@@ -47,7 +47,7 @@ public class VehicleService {
     @Transactional
     public void delete(UUID id){
         if(!vehicleRepository.existsById(id)){
-            throw new NoSuchException("Veículo");
+            throw new EntityNotFoundException("Veículo");
         }
 
         vehicleRepository.deleteById(id);
@@ -57,7 +57,7 @@ public class VehicleService {
     public Vehicle update(VehicleRequestDTO dto, UUID id){
 
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if(vehicle.isEmpty()) throw new NoSuchException("Veículo");
+        if(vehicle.isEmpty()) throw new EntityNotFoundException("Veículo");
 
         Vehicle newVehicle = new Vehicle(dto);
         newVehicle.setId(id);

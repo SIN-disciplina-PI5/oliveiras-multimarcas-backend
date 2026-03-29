@@ -3,7 +3,7 @@ package pi.oliveiras_multimarcas.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Token;
 import pi.oliveiras_multimarcas.repositories.TokenRepositorie;
 
@@ -34,7 +34,7 @@ public class TokenService {
     @Transactional
     public void deleteByToken(String token){
         Optional<Token> tokenFinded = tokenRepositorie.findByToken(token);
-        if (tokenFinded.isEmpty()) throw new NoSuchException("Token");
+        if (tokenFinded.isEmpty()) throw new EntityNotFoundException("Token");
 
         tokenRepositorie.deleteByToken(token);
     }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.SaleResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Sale;
 import pi.oliveiras_multimarcas.services.SaleService;
 
@@ -35,7 +35,7 @@ public class SaleControllers {
             SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
 
             return ResponseEntity.ok().body(saleResponse);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).build();
         }
     }
@@ -60,7 +60,7 @@ public class SaleControllers {
             return ResponseEntity.ok(saleResponse);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }
@@ -70,7 +70,7 @@ public class SaleControllers {
         try {
             saleService.deleteById(id);
             return ResponseEntity.ok().body("Usuário deletado");
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }

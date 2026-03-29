@@ -5,7 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 
@@ -31,7 +32,7 @@ public class ClientService {
 
         return clientRepository
                 .findById(id)
-                .orElseThrow(() -> new NoSuchException("Cliente"));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente"));
     }
 
     @Transactional
@@ -46,7 +47,7 @@ public class ClientService {
     public Client updateById(UUID id, ClientRequestDTO dto) {
         clientRepository
                 .findById(id)
-                .orElseThrow(() -> new NoSuchException("Usuário"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
 
         Client client = toEntity(dto);
         client.setId(id);
@@ -60,7 +61,7 @@ public class ClientService {
     public void deleteById(UUID id) {
         if (!clientRepository
                 .existsById(id)) {
-            throw new NoSuchException("Usuário");
+            throw new EntityNotFoundException("Usuário");
         }
         clientRepository
                 .deleteById(id);
@@ -69,7 +70,7 @@ public class ClientService {
     public Client findByEmail(String email) {
         return clientRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new NoSuchException("Usuário"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
     }
 
     private Client toEntity(ClientRequestDTO dto) {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.services.ClientService;
 
@@ -34,7 +34,7 @@ public class ClientController {
             Client client = clientService.findById(id);
             ClientResponseDTO clientResponse = new ClientResponseDTO(client);
             return ResponseEntity.ok().body(clientResponse);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).build();
         }
     }
@@ -61,7 +61,7 @@ public class ClientController {
             return ResponseEntity.ok(clientResponseDTO);
         } catch (InvalidArguments e) {
             return ResponseEntity.status(400).body(e.getMessage());
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }
@@ -71,7 +71,7 @@ public class ClientController {
         try {
             clientService.deleteById(id);
             return ResponseEntity.ok().body("Usuário deletado");
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
     }

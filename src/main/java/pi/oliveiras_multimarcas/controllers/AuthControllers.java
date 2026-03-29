@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.*;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.security.JwtUtil;
@@ -69,7 +69,7 @@ public class AuthControllers {
 
             return ResponseEntity.ok().body(signInResponseDTO);
         
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             // Se não achar funcionário, tenta como Cliente
             try{
                 client = clientService.findByEmail(dto.getEmail());
@@ -83,7 +83,7 @@ public class AuthControllers {
                 SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
 
                 return ResponseEntity.ok().body(signInResponseDTO);
-            } catch (NoSuchException j) {
+            } catch (EntityNotFoundException j) {
                 return ResponseEntity.notFound().build();
             }
         }
@@ -99,7 +99,7 @@ public class AuthControllers {
 
         try{
             tokenService.deleteByToken(token);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -128,12 +128,12 @@ public class AuthControllers {
             Employee employee = employeeService.findById(id);
             RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
             return ResponseEntity.ok().body(acessToken);
-        } catch (NoSuchException e){
+        } catch (EntityNotFoundException e){
             try{
                 Client client = clientService.findById(id);
                 RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, client.getEmail()));
                 return ResponseEntity.ok().body(acessToken);
-            }catch (NoSuchException j){
+            }catch (EntityNotFoundException j){
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         }

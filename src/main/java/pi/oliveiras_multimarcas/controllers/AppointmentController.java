@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.DTO.AppointmentResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.services.AppointmentService;
 
@@ -28,7 +28,7 @@ public class AppointmentController {
             // Retorna 201 Created com a localização do novo recurso
             URI location = URI.create("/appointments/" + newAppointment.getId());
             return ResponseEntity.created(location).body(newAppointment);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             // Caso o Cliente ou Veículo não sejam encontrados
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -45,7 +45,7 @@ public class AppointmentController {
         try {
             AppointmentResponseDTO appointment = appointmentService.findById(id);
             return ResponseEntity.ok(appointment);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -57,7 +57,7 @@ public class AppointmentController {
         try {
             AppointmentResponseDTO updatedAppointment = appointmentService.updateStatus(id, status);
             return ResponseEntity.ok(updatedAppointment);
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
@@ -67,7 +67,7 @@ public class AppointmentController {
         try {
             appointmentService.deleteById(id);
             return ResponseEntity.noContent().build(); // Retorna 204 No Content
-        } catch (NoSuchException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(404).body(e.getMessage()); // Retorna 404 Not Found
         }
     }
