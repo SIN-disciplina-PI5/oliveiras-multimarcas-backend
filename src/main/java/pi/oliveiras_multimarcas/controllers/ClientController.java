@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.services.ClientService;
 
@@ -30,49 +28,31 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id) {
-        try {
-            Client client = clientService.findById(id);
-            ClientResponseDTO clientResponse = new ClientResponseDTO(client);
-            return ResponseEntity.ok().body(clientResponse);
-        } catch (NoSuchException e) {
-            return ResponseEntity.status(404).build();
-        }
+        Client client = clientService.findById(id);
+        ClientResponseDTO clientResponse = new ClientResponseDTO(client);
+        return ResponseEntity.ok().body(clientResponse);
     }
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> insert(@RequestBody @Valid ClientRequestDTO clientRequestDTO) {
-        try {
-            if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            Client client = clientService.insert(clientRequestDTO);
-            ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
-            return ResponseEntity.status(201).body(clientResponseDTO);
-        } catch (InvalidArguments e) {
+        if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
             return ResponseEntity.badRequest().build();
         }
+        Client client = clientService.insert(clientRequestDTO);
+        ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
+        return ResponseEntity.status(201).body(clientResponseDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody @Valid ClientRequestDTO ClientRequestDTO) {
-        try {
-            Client client = clientService.updateById(id, ClientRequestDTO);
-            ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
-            return ResponseEntity.ok(clientResponseDTO);
-        } catch (InvalidArguments e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        } catch (NoSuchException e) {
-            return ResponseEntity.status(404).body("Usuário não encontrado");
-        }
+        Client client = clientService.updateById(id, ClientRequestDTO);
+        ClientResponseDTO clientResponseDTO = new ClientResponseDTO(client);
+        return ResponseEntity.ok(clientResponseDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-        try {
-            clientService.deleteById(id);
-            return ResponseEntity.ok().body("Usuário deletado");
-        } catch (NoSuchException e) {
-            return ResponseEntity.status(404).body("Usuário não encontrado");
-        }
+        clientService.deleteById(id);
+        return ResponseEntity.ok().body("Usuário deletado");
     }
 }

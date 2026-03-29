@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
@@ -22,7 +21,7 @@ public class VehicleControllers {
     @Autowired
     VehicleService vehicleService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<VehicleResponseDTO>> findAll() {
         List<Vehicle> vehicles = vehicleService.findAll();
         List<VehicleResponseDTO> vehiclesResponseDTO = vehicles.stream()
@@ -35,12 +34,7 @@ public class VehicleControllers {
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> findById(@PathVariable UUID id) {
         Vehicle vehicle;
-        try {
-            vehicle = vehicleService.findyById(id);
-        } catch (NoSuchException e) {
-            return ResponseEntity.notFound().build();
-        }
-
+        vehicle = vehicleService.findyById(id);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
 
         return ResponseEntity.ok().body(vehicleResponseDTO);
@@ -61,24 +55,14 @@ public class VehicleControllers {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteByID(@PathVariable UUID id) {
-        try {
-            vehicleService.delete(id);
-        } catch (NoSuchException e) {
-            return ResponseEntity.notFound().build();
-        }
+        vehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> updateById(@PathVariable UUID id, @Valid @RequestBody VehicleRequestDTO dto) {
         Vehicle vehicle;
-
-        try{
-            vehicle = vehicleService.update(dto, id);
-        } catch (NoSuchException e) {
-            return ResponseEntity.notFound().build();
-        }
-
+        vehicle = vehicleService.update(dto, id);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
 
         return ResponseEntity.ok().body(vehicleResponseDTO);

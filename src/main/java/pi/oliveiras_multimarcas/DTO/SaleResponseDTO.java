@@ -17,14 +17,14 @@ import java.util.UUID;
 public class SaleResponseDTO {
     private UUID id;
     
-    private Client client;
-    private Vehicle vehicle;
+    private UUID client;
+    private UUID vehicle;
     private Date saleDate;
 
     public SaleResponseDTO(Sale sale) {
         this.id = sale.getId();
-        this.client = sale.getClient();
-        this.vehicle = sale.getVehicle();
+        this.client = sale.getClient().getId();
+        this.vehicle = sale.getVehicle().getId();
         this.saleDate = sale.getSaleDate();
     }
 }

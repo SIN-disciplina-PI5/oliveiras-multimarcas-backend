@@ -24,11 +24,10 @@ public class Token {
     @Column(nullable = false)
     private UUID userId;
     @Column(nullable = false)
-    private LocalDateTime expires;
+    private LocalDateTime expires = LocalDateTime.now().plusDays(7);
 
-    Token(String token, UUID userId, LocalDateTime expites){
+    Token(String token, UUID userId){
         this.token = token;
         this.userId = userId;
-        this.expires = expites;
     }
 }

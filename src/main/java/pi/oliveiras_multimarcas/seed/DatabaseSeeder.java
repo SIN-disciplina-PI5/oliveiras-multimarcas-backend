@@ -33,9 +33,9 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle1.setPrice(new BigDecimal("125000.00"));
         List<String> images1 = new ArrayList<String>();
 
-        images1.add("https://example1/1");
-        images1.add("https://example1/2");
-        images1.add("https://example1/3");
+        images1.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images1.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images1.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
 
         vehicle1.setUrl_images(images1);
         vehicle1.setDescription("Sedan médio com ótimo desempenho, conforto e baixo consumo de combustível.");
@@ -50,9 +50,9 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle2.setPrice(new BigDecimal("145000.00"));
         List<String> images2 = new ArrayList<String>();
 
-        images2.add("https://example2/1");
-        images2.add("https://example2/2");
-        images2.add("https://example2/3");
+        images2.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images2.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images2.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
 
         vehicle2.setUrl_images(images2);
         vehicle2.setDescription("Versão híbrida do Corolla, unindo eficiência energética e conforto premium.");
@@ -67,9 +67,9 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle3.setPrice(new BigDecimal("138000.00"));
         List<String> images3 = new ArrayList<String>();
 
-        images3.add("https://example3/1");
-        images3.add("https://example3/2");
-        images3.add("https://example3/3");
+        images3.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images3.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
+        images3.add("https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=400&q=80");
 
         vehicle3.setUrl_images(images3);
         vehicle3.setDescription("SUV robusto com tração 4x4 e interior sofisticado, ideal para viagens longas.");
