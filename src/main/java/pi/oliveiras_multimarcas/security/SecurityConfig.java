@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.security;
 
+import io.swagger.v3.oas.models.PathItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error").permitAll()
                         .requestMatchers( HttpMethod.POST,"/auth/signin", "/auth/signup").permitAll()
+                        .requestMatchers( HttpMethod.POST, "/clients").permitAll()
+                        .requestMatchers( HttpMethod.PUT, "/clients").permitAll()
+                        .requestMatchers("/sales/**", "/sales").authenticated()
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/**").authenticated()
