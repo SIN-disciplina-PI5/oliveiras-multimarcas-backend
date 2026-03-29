@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@RestController 
 @RequestMapping("/appointments")
 public class AppointmentController {
 
