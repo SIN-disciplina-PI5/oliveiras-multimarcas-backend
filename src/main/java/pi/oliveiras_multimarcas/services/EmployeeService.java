@@ -11,7 +11,6 @@ import pi.oliveiras_multimarcas.repositories.EmployeeRepository;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {

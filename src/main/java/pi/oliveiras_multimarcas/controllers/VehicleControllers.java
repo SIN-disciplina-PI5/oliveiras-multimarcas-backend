@@ -1,5 +1,6 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class VehicleControllers {
     }
 
     @PostMapping("/")
-    public ResponseEntity<VehicleResponseDTO> insert(@RequestBody VehicleRequestDTO dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<VehicleResponseDTO> insert(@Valid @RequestBody VehicleRequestDTO dto, UriComponentsBuilder uriBuilder) {
 
         Vehicle vehicle = vehicleService.insert(dto);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
@@ -59,7 +60,7 @@ public class VehicleControllers {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> updateById(@PathVariable UUID id, @RequestBody VehicleRequestDTO dto) {
+    public ResponseEntity<VehicleResponseDTO> updateById(@PathVariable UUID id, @Valid @RequestBody VehicleRequestDTO dto) {
         Vehicle vehicle;
         vehicle = vehicleService.update(dto, id);
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
