@@ -8,6 +8,7 @@ import pi.oliveiras_multimarcas.models.Token;
 import pi.oliveiras_multimarcas.repositories.TokenRepositorie;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -22,10 +23,10 @@ public class TokenService {
     }
 
     @Transactional
-    public Token insert(String token){
+    public Token insert(String token, UUID userId){
         Token newToken = new Token();
         newToken.setToken(token);
-
+        newToken.setUserId(userId);
         newToken = tokenRepositorie.save(newToken);
 
         return newToken;

@@ -39,13 +39,8 @@ public class AuthControllers {
     private TokenService tokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid @RequestBody EmployeeRequestDTO dto) {
-        try {
-            // Agora usamos o employeeService diretamente
-            employeeService.insert(dto);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Void> signup(@RequestBody EmployeeRequestDTO dto) {
+        employeeService.insert(dto);
         return ResponseEntity.ok().build();
     }
 
@@ -56,58 +51,34 @@ public class AuthControllers {
         Client client;
         
         // Tenta logar primeiro como Funcionário
-        try{
-            employee = employeeService.findByEmail(dto.getEmail());
-            if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-            String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
-            String acessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
-            tokenService.insert(refreshToken);
-            SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
-
-            return ResponseEntity.ok().body(signInResponseDTO);
-        
-        } catch (EntityNotFoundException e) {
-            // Se não achar funcionário, tenta como Cliente
-            try{
-                client = clientService.findByEmail(dto.getEmail());
-                if (!passwordEncoder.matches(dto.getPassword(), client.getPassword())) {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                }
-
-                String refreshToken = jwtUtil.generateTokenRefresh(client.getId(), client.getEmail());
-                String acessToken = jwtUtil.generateTokenAcess(client.getId(), client.getEmail());
-                tokenService.insert(refreshToken);
-                SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
-
-                return ResponseEntity.ok().body(signInResponseDTO);
-            } catch (EntityNotFoundException j) {
-                return ResponseEntity.notFound().build();
-            }
+        employee = employeeService.findByEmail(dto.getEmail());
+        if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
+        String acessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
+        tokenService.insert(refreshToken, employee.getId());
+        SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
+
+        return ResponseEntity.ok().body(signInResponseDTO);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader HttpServletRequest authorization){
+    public ResponseEntity<Void> logout( HttpServletRequest authorization){
         String authHeader = authorization.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().build();
         }
         String token = authHeader.substring(7);
 
-        try{
-            tokenService.deleteByToken(token);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        tokenService.deleteByToken(token);
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestHeader HttpServletRequest authorization) {
+    public ResponseEntity<RefreshTokenResponseDTO> refreshToken( HttpServletRequest authorization) {
         String authHeader = authorization.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -124,18 +95,8 @@ public class AuthControllers {
         Object userId = claim.get("id");
         UUID id = UUID.fromString(userId.toString());
 
-        try{
-            Employee employee = employeeService.findById(id);
-            RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
-            return ResponseEntity.ok().body(acessToken);
-        } catch (EntityNotFoundException e){
-            try{
-                Client client = clientService.findById(id);
-                RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, client.getEmail()));
-                return ResponseEntity.ok().body(acessToken);
-            }catch (EntityNotFoundException j){
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        }
+        Employee employee = employeeService.findById(id);
+        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
+        return ResponseEntity.ok().body(acessToken);
     }
 }

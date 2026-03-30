@@ -30,48 +30,30 @@ public class SaleControllers {
 
     @GetMapping("/{id}")
     public ResponseEntity<SaleResponseDTO> findById(@PathVariable UUID id) {
-        try {
-            Sale sale = saleService.findById(id);
-            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+        Sale sale = saleService.findById(id);
+        SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
 
-            return ResponseEntity.ok().body(saleResponse);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(404).build();
-        }
+        return ResponseEntity.ok().body(saleResponse);
     }
 
     @PostMapping
-    public ResponseEntity<SaleResponseDTO> insert(@Valid @RequestBody SaleRequestDTO dto) {
-        try {
-            Sale sale = saleService.insert(dto);
-            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
-            return ResponseEntity.status(201).body(saleResponse);
-        } catch (InvalidArguments e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<SaleResponseDTO> insert(@RequestBody SaleRequestDTO dto) {
+        Sale sale = saleService.insert(dto);
+        SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+        return ResponseEntity.status(201).body(saleResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateById(@PathVariable UUID id, @Valid @RequestBody SaleRequestDTO dto) {
-        try {
-            Sale sale = saleService.updateById(id, dto);
-            SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
+    public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody SaleRequestDTO dto) {
+        Sale sale = saleService.updateById(id, dto);
+        SaleResponseDTO saleResponse = new SaleResponseDTO(sale);
 
-            return ResponseEntity.ok(saleResponse);
-        } catch (InvalidArguments e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(404).body("Usuário não encontrado");
-        }
+        return ResponseEntity.ok(saleResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable UUID id) {
-        try {
-            saleService.deleteById(id);
-            return ResponseEntity.ok().body("Usuário deletado");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(404).body("Usuário não encontrado");
-        }
+        saleService.deleteById(id);
+        return ResponseEntity.ok().body("Usuário deletado");
     }
 }
