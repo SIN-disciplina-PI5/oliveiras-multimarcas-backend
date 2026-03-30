@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.DTO.AppointmentResponseDTO;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.services.AppointmentService;
 

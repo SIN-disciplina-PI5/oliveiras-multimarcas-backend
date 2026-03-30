@@ -132,6 +132,7 @@
                         <include>**/*Tests.java</include>
                     </includes>
                     <useModulePath>false</useModulePath>
+                    <argLine>-Dnet.bytebuddy.experimental=true</argLine>
                 </configuration>
             </plugin>
 
