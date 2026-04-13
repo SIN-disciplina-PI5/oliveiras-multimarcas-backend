@@ -98,4 +98,10 @@ public class AuthControllers {
         RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
         return ResponseEntity.ok().body(acessToken);
     }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateToken(){
+
+        return  ResponseEntity.ok().build();
+    }
 }
