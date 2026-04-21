@@ -70,9 +70,8 @@ public class SaleService {
             client =  clientService.findById(dto.getClient());
             vehicle = vehicleService.findyById(dto.getVehicle());
         }catch (NoSuchException e){
-            throw new RuntimeException(e.getMessage());
+            throw new NoSuchException("client or vehicle");
         }
-        sale.setSaleDate(dto.getSaleDate());
         sale.setClient(client);
         sale.setVehicle(vehicle);
         return sale;
