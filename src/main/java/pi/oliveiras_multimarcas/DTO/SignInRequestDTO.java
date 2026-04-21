@@ -19,4 +19,6 @@ public class SignInRequestDTO {
     
     @NotBlank(message = "A senha é obrigatória")
     private String password;
+    @NotBlank(message="Token de recaptcha é obrigatório")
+    private String recaptchaToken;
 }
