@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-**/application-dev.properties
+*-dev.properties
+*-test.properties
+
+.env
