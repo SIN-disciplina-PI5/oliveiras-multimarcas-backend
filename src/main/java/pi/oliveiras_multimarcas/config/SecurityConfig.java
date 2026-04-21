@@ -1,6 +1,5 @@
-package pi.oliveiras_multimarcas.security;
+package pi.oliveiras_multimarcas.config;
 
-import io.swagger.v3.oas.models.PathItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pi.oliveiras_multimarcas.security.JwtFilter;
 
 import java.util.List;
 
@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error").permitAll()
                         .requestMatchers( HttpMethod.POST,"/auth/signin", "/auth/signup").permitAll()
                         .requestMatchers( HttpMethod.POST, "/clients").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/vehicles/view/**", "/vehicles/mostPopular").permitAll()
                         .requestMatchers( HttpMethod.PUT, "/clients").permitAll()
                         .requestMatchers("/sales/**", "/sales").authenticated()
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()

@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.security;
+package pi.oliveiras_multimarcas.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
