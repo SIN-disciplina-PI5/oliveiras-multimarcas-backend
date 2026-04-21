@@ -37,7 +37,6 @@ public class ClientService {
     @Transactional
     public Client insert(ClientRequestDTO dto) {
         Client client = toEntity(dto);
-        client.setPassword(passwordEncoder.encode(dto.getPassword()));
         client = clientRepository.save(client);
         return client;
     }
@@ -50,7 +49,6 @@ public class ClientService {
 
         Client client = toEntity(dto);
         client.setId(id);
-        client.setPassword(passwordEncoder.encode(dto.getPassword()));
         client = clientRepository
                 .save(client);
         return client;
@@ -76,9 +74,7 @@ public class ClientService {
         Client client = new Client();
         client.setName(dto.getUsername());
         client.setEmail(dto.getEmail());
-        client.setPassword(dto.getPassword());
         client.setContact(dto.getContact());
-        client.setRole(dto.getRole());
         return client;
     }
 }
