@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -14,10 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class CarView {
+public class VehicleView {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @Column
     private Date dateTime = new Date();
@@ -26,7 +25,7 @@ public class CarView {
     @JoinColumn(name="vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    public CarView(Vehicle vehicle){
+    public VehicleView(Vehicle vehicle){
         this.vehicle = vehicle;
     }
 
