@@ -32,7 +32,7 @@ public class AppointmentService {
 
 
     @Transactional
-    public AppointmentResponseDTO createAppointment(AppointmentRequestDTO dto) { //
+    public AppointmentResponseDTO insert(AppointmentRequestDTO dto) { //
         // 1. Busca as entidades relacionadas
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                 .orElseThrow(() -> new NoSuchException("Veículo")); //
