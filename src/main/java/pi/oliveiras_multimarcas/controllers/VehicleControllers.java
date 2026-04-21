@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
 import pi.oliveiras_multimarcas.services.VehicleViewService;

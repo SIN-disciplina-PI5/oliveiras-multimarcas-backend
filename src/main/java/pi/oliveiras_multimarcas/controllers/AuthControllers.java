@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.*;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.security.JwtUtil;

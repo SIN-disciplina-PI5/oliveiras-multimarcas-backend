@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
 import pi.oliveiras_multimarcas.DTO.SaleResponseDTO;
+import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
+import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Sale;
 import pi.oliveiras_multimarcas.services.SaleService;
 
