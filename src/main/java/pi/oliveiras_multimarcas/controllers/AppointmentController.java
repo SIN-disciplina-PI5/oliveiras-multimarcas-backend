@@ -23,7 +23,7 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody AppointmentRequestDTO dto) {
-        AppointmentResponseDTO newAppointment = appointmentService.createAppointment(dto);
+        AppointmentResponseDTO newAppointment = appointmentService.insert(dto);
         // Retorna 201 Created com a localização do novo recurso
         URI location = URI.create("/appointments/" + newAppointment.getId());
         return ResponseEntity.created(location).body(newAppointment);

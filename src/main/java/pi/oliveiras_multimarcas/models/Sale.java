@@ -29,16 +29,13 @@ public class Sale {
     @JoinColumn(name="client_id", nullable=true)
     private Client client;
     @Column
-    private Date saleDate;
+    private Date saleDate = new Date();
     @ManyToOne
     @JoinColumn(name="vehicle_id", nullable=true)
     private Vehicle vehicle;
 
-    public Sale (Vehicle vehicle, Client client, Date saleDate){
+    public Sale (Vehicle vehicle, Client client){
         this.vehicle = vehicle;
         this.client = client;
-        this.saleDate = saleDate;
     }
-
-
 }

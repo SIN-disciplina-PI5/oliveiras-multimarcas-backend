@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
-import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.DTO.*;
+import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
-import pi.oliveiras_multimarcas.services.EmployeeService; // Importação correta
-import pi.oliveiras_multimarcas.services.VehicleService;
+import pi.oliveiras_multimarcas.services.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,22 @@ import java.util.List;
 public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
+    VehicleViewService vehicleViewService;
+
+    @Autowired
+    ClientService clientService;
+
+    @Autowired
+    SaleService saleService;
+
+    @Autowired
+    AppointmentService appointmentService;
+
+    @Autowired
     VehicleService vehicleService;
 
     @Autowired
-    EmployeeService userService; // Mantive o nome 'userService', mas o tipo é EmployeeService
+    EmployeeService employeeService;
 
     @Override
     public void run(String... args){
@@ -78,24 +91,82 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         vehicleService.insert(vehicle3);
 
-        EmployeeRequestDTO user1 = new EmployeeRequestDTO();
-        user1.setEmail("teste1@gmail.com");
-        user1.setPassword("Senha1234");
-        user1.setName("epamilondas");
-        user1.setPosition("vendedor");
-        user1.setContact("081900000000");
-        user1.setRole(UserRole.ADMIN);
+        EmployeeRequestDTO employee1 = new EmployeeRequestDTO();
+        employee1.setEmail("teste1@gmail.com");
+        employee1.setPassword("Senha1234");
+        employee1.setName("epamilondas");
+        employee1.setPosition("vendedor");
+        employee1.setContact("081900000000");
+        employee1.setRole(UserRole.ADMIN);
 
-        userService.insert(user1);
+        employeeService.insert(employee1);
 
-        EmployeeRequestDTO user2 = new EmployeeRequestDTO();
-        user2.setEmail("teste2@gmail.com");
-        user2.setPassword("S3nh4123");
-        user2.setName("Josefa");
-        user2.setPosition("vendedor");
-        user2.setContact("081900000001");
-        user2.setRole(UserRole.ADMIN);
+        EmployeeRequestDTO employee2 = new EmployeeRequestDTO();
+        employee2.setEmail("teste2@gmail.com");
+        employee2.setPassword("S3nh4123");
+        employee2.setName("Josefa");
+        employee2.setPosition("vendedor");
+        employee2.setContact("081900000001");
+        employee2.setRole(UserRole.ADMIN);
 
-        userService.insert(user2);
+        employeeService.insert(employee2);
+
+        ClientRequestDTO client1 = new ClientRequestDTO();
+        client1.setUsername("Paulinha");
+        client1.setEmail("paulinha@gmail.com");
+        client1.setContact("081900000002");
+
+        clientService.insert(client1);
+
+        ClientRequestDTO client2 = new ClientRequestDTO();
+        client2.setUsername("Roberval");
+        client2.setEmail("roberval@gmail.com");
+        client2.setContact("081900000003");
+
+        clientService.insert(client2);
+
+        SaleRequestDTO sale1 = new SaleRequestDTO();
+        sale1.setClient(clientService.findByEmail(client1.getEmail()).getId());
+        sale1.setVehicle(vehicleService.findAll().getFirst().getId());
+
+        saleService.insert(sale1);
+
+        SaleRequestDTO sale2 = new SaleRequestDTO();
+        sale2.setClient(clientService.findByEmail(client2.getEmail()).getId());
+        sale2.setVehicle(vehicleService.findAll().get(1).getId());
+
+        saleService.insert(sale2);
+
+        AppointmentRequestDTO appointment1 = new AppointmentRequestDTO();
+
+        appointment1.setClientId(clientService.findByEmail(client1.getEmail()).getId());
+        appointment1.setVehicleId(vehicleService.findAll().get(2).getId());
+        appointment1.setStatus(Status.PENDING);
+        appointment1.setDescription("descrição aqui");
+        appointment1.setSchedulingTime(LocalTime.of(9, 0,0));
+        appointment1.setSchedulingDate(LocalDate.of(2026,5, 12));
+
+        appointmentService.insert(appointment1);
+
+        AppointmentRequestDTO appointment2 = new AppointmentRequestDTO();
+
+        appointment2.setClientId(clientService.findByEmail(client2.getEmail()).getId());
+        appointment2.setVehicleId(vehicleService.findAll().get(2).getId());
+        appointment2.setStatus(Status.PENDING);
+        appointment2.setDescription("descrição aqui");
+        appointment2.setSchedulingTime(LocalTime.of(9, 0,0));
+        appointment2.setSchedulingDate(LocalDate.of(2026,5, 13));
+
+        appointmentService.insert(appointment2);
+
+        for (int i = 0; i < 20; i++) {
+            vehicleViewService.insert(vehicleService.findAll().getFirst().getId());
+            if (i%2==0){
+                vehicleViewService.insert(vehicleService.findAll().get(2).getId());
+            }
+            if (i%5==0){
+                vehicleViewService.insert(vehicleService.findAll().get(1).getId());
+            }
+        }
     }
 }

@@ -17,10 +17,18 @@ public class Employee extends User {
 
     @Column
     private String position;
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
     public Employee(EmployeeRequestDTO dto){
-        super(dto.getName(), dto.getEmail(), dto.getPassword(), UserRole.ADMIN, dto.getContact());
+        super(dto.getName(), dto.getEmail(), dto.getContact());
         position = dto.getPosition();
+        password = dto.getPassword();
+        role = UserRole.ADMIN;
     }
 
 }

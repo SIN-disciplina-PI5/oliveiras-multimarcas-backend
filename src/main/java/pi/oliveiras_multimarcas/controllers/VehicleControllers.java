@@ -10,6 +10,7 @@ import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
 import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
+import pi.oliveiras_multimarcas.services.VehicleViewService;
 
 import java.net.URI;
 import java.util.List;
@@ -20,7 +21,10 @@ import java.util.UUID;
 public class VehicleControllers {
 
     @Autowired
-    VehicleService vehicleService;
+    private VehicleService vehicleService;
+
+    @Autowired
+    private VehicleViewService vehicleViewService;
 
     @GetMapping
     public ResponseEntity<List<VehicleResponseDTO>> findAll() {
@@ -67,6 +71,21 @@ public class VehicleControllers {
         VehicleResponseDTO vehicleResponseDTO = new VehicleResponseDTO(vehicle);
 
         return ResponseEntity.ok().body(vehicleResponseDTO);
+    }
+
+    @GetMapping("/mostPopular")
+    public ResponseEntity<List<VehicleResponseDTO>> findMostPopularVehicles(){
+        List<Vehicle> vehicles = vehicleViewService.findTop5Vehicles();
+        List<VehicleResponseDTO> vehiclesResponseDTO = vehicles.stream()
+                .map(VehicleResponseDTO::new)
+                .toList();
+        return ResponseEntity.ok().body(vehiclesResponseDTO);
+    }
+
+    @PostMapping("/view/{id}")
+    public ResponseEntity<Void> carViewed(@PathVariable UUID id){
+        vehicleViewService.insert(id);
+        return ResponseEntity.ok().build();
     }
 }
 

@@ -14,6 +14,7 @@ import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.security.JwtUtil;
 import pi.oliveiras_multimarcas.services.ClientService;
 import pi.oliveiras_multimarcas.services.EmployeeService;
+import pi.oliveiras_multimarcas.services.RecaptchaService;
 import pi.oliveiras_multimarcas.services.TokenService;
 
 import java.util.Map;
@@ -22,6 +23,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/auth")
 public class AuthControllers {
+
+    @Autowired
+    private RecaptchaService recaptchaService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -45,23 +49,45 @@ public class AuthControllers {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponseDTO> signin(@Valid @RequestBody SignInRequestDTO dto){
+    public ResponseEntity<?> signin(@Valid @RequestBody SignInRequestDTO dto){
 
-        Employee employee;
-        Client client;
-        
-        // Tenta logar primeiro como Funcionário
-        employee = employeeService.findByEmail(dto.getEmail());
+        Map<String, Object> response = recaptchaService.verify(dto.getRecaptchaToken());
+
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        Boolean success = (Boolean) response.get("success");
+
+        if (!Boolean.TRUE.equals(success)) {
+            System.out.println("Erro recaptcha: " + response);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Double score = response.get("score") != null
+                ? ((Number) response.get("score")).doubleValue()
+                : 0.0;
+
+        if (score < 0.6) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Employee employee = employeeService.findByEmail(dto.getEmail());
+        if (employee == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
-        String acessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
-        tokenService.insert(refreshToken, employee.getId());
-        SignInResponseDTO signInResponseDTO = new SignInResponseDTO(refreshToken,acessToken);
+        String accessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
 
-        return ResponseEntity.ok().body(signInResponseDTO);
+        tokenService.insert(refreshToken, employee.getId());
+
+        SignInResponseDTO responseDTO = new SignInResponseDTO(refreshToken, accessToken);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/logout")
@@ -98,5 +124,11 @@ public class AuthControllers {
         Employee employee = employeeService.findById(id);
         RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
         return ResponseEntity.ok().body(acessToken);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateToken(){
+
+        return  ResponseEntity.ok().build();
     }
 }

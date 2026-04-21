@@ -69,10 +69,9 @@ public class SaleService {
         try{
             client =  clientService.findById(dto.getClient());
             vehicle = vehicleService.findyById(dto.getVehicle());
-        }catch (EntityNotFoundException e){
-            throw new RuntimeException(e.getMessage());
+        }catch (NoSuchException e){
+            throw new NoSuchException("client or vehicle");
         }
-        sale.setSaleDate(dto.getSaleDate());
         sale.setClient(client);
         sale.setVehicle(vehicle);
         return sale;
