@@ -1,7 +1,7 @@
 package pi.oliveiras_multimarcas.unit;
 
 import org.junit.jupiter.api.Test;
-import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;

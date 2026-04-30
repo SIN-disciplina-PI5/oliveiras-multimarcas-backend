@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.repositories.EmployeeRepository;

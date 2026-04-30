@@ -28,7 +28,7 @@ public class VehicleControllerIT {
             {
                 "model": "Civic EXL",
                 "modelYear": 2022,
-                "price": 125000.00,
+                "price": "125000.00",
                 "url_images": [
                     "https://example.com/images/civic_exl_front.jpg",
                     "https://example.com/images/civic_exl_interior.jpg",

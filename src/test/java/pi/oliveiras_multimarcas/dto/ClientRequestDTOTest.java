@@ -6,7 +6,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
 
 import java.util.Set;
 
@@ -25,13 +24,10 @@ class ClientRequestDTOTest {
     @Test
     void deveValidarDTOValido() {
         ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername("user123");
+        dto.setName("user123");
         dto.setEmail("teste@teste.com");
-        dto.setPassword("senha123");
         dto.setContact("81999999999");
-        dto.setRole(null);
-
-        dto.setRole(pi.oliveiras_multimarcas.models.enums.UserRole.USER);
+        dto.setCpf("12345678903");
 
         Set<ConstraintViolation<ClientRequestDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty(), "DTO deveria ser válido");
@@ -40,24 +36,21 @@ class ClientRequestDTOTest {
     @Test
     void deveFalharQuandoUsernameVazio() {
         ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername(""); 
         dto.setEmail("teste@teste.com");
-        dto.setPassword("senha123");
 
         Set<ConstraintViolation<ClientRequestDTO>> violations = validator.validate(dto);
 
         assertFalse(violations.isEmpty());
         assertTrue(violations.stream()
-                .anyMatch(v -> v.getPropertyPath().toString().equals("username") &&
+                .anyMatch(v -> v.getPropertyPath().toString().equals("name") &&
                         v.getMessage().contains("não pode estar em branco")));
     }
 
     @Test
     void deveFalharQuandoEmailInvalido() {
         ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername("user123");
+        dto.setName("user123");
         dto.setEmail("emailinvalido"); // inválido
-        dto.setPassword("senha123");
 
         Set<ConstraintViolation<ClientRequestDTO>> violations = validator.validate(dto);
 
@@ -65,20 +58,5 @@ class ClientRequestDTOTest {
         assertTrue(violations.stream()
                 .anyMatch(v -> v.getPropertyPath().toString().equals("email") &&
                         v.getMessage().contains("Formato de email inválido")));
-    }
-
-    @Test
-    void deveFalharQuandoSenhaPequena() {
-        ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername("user123");
-        dto.setEmail("teste@teste.com");
-        dto.setPassword("123"); 
-
-        Set<ConstraintViolation<ClientRequestDTO>> violations = validator.validate(dto);
-
-        assertFalse(violations.isEmpty());
-        assertTrue(violations.stream()
-                .anyMatch(v -> v.getPropertyPath().toString().equals("password") &&
-                        v.getMessage().contains("entre 5 e 20")));
     }
 }

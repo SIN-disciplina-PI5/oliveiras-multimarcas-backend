@@ -3,7 +3,7 @@ package pi.oliveiras_multimarcas.unit;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 

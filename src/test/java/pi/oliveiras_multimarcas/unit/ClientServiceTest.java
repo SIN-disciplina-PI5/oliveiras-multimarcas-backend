@@ -6,9 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 import pi.oliveiras_multimarcas.services.ClientService;
 
@@ -50,16 +49,13 @@ public class ClientServiceTest {
     @Test
     void testInsertClientSuccess() {
         ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername("Novo Cliente");
+        dto.setName("Novo Cliente");
         dto.setEmail("novo@email.com");
-        dto.setPassword("123456");
-        dto.setRole(UserRole.USER);
-
+        dto.setCpf("12345678913");
+        dto.setContact("81900000009");
         Client savedClient = new Client();
         savedClient.setId(UUID.randomUUID());
-        savedClient.setName("Novo Cliente");
 
-        when(passwordEncoder.encode(any())).thenReturn("encodedPass");
         when(clientRepository.save(any(Client.class))).thenReturn(savedClient);
 
         Client result = clientService.insert(dto);
