@@ -71,7 +71,7 @@ public class VehicleTests {
         BigDecimal price = new BigDecimal(priceParam);
         Vehicle vehicle = new Vehicle();
         int compare = price.compareTo(new BigDecimal(0));
-        if ( compare == -1 || compare == 0) {
+        if ( compare < 0 || compare == 0) {
             assertThrows(InvalidArguments.class,()->{
                 vehicle.setPrice(price);
             });
