@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.Status;
 
 import java.time.LocalDate;

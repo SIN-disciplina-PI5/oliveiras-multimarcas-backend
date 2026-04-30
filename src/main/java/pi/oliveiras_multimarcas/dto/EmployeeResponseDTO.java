@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +19,15 @@ public class EmployeeResponseDTO {
     private String name; 
     private String email;
     private String position; 
-    private UserRole role; 
+    private UserRole role;
+    private String cpf;
 
     public EmployeeResponseDTO(Employee employee) {
-        this.id = employee.getId();
-        this.name = employee.getName();
-        this.email = employee.getEmail();
-        this.position = employee.getPosition();
-        this.role = employee.getRole();
+        id = employee.getId();
+        name = employee.getName();
+        email = employee.getEmail();
+        position = employee.getPosition();
+        role = employee.getRole();
+        cpf = employee.getCpf();
     }
 }

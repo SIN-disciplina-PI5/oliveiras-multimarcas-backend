@@ -10,11 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
+import pi.oliveiras_multimarcas.dto.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.ClientService;
 import pi.oliveiras_multimarcas.services.VehicleService;
 
@@ -57,11 +56,11 @@ public class AppointmentControllerIT {
 
         // Cria Cliente
         ClientRequestDTO clientDTO = new ClientRequestDTO();
-        clientDTO.setUsername("Maria Teste");
+        clientDTO.setName("Maria Teste");
         clientDTO.setEmail("maria@teste.com");
-        clientDTO.setPassword("123456");
         clientDTO.setContact("99999999");
-        clientDTO.setRole(UserRole.USER);
+        clientDTO.setCpf("12345678928");
+        clientDTO.setContact("81900001232");
 
         // Verifica se já existe para evitar erro de duplicidade em testes repetidos ou usa try/catch
         try {

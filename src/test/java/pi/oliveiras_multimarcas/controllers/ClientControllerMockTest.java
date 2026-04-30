@@ -11,9 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.ClientService;
 import pi.oliveiras_multimarcas.security.JwtUtil;
 import pi.oliveiras_multimarcas.services.TokenService;
@@ -50,16 +49,14 @@ public class ClientControllerMockTest {
     void testInsertClientEndpoint() throws Exception {
         // Preparação do DTO de entrada
         ClientRequestDTO dto = new ClientRequestDTO();
-        dto.setUsername("Mock Teste");
+        dto.setName("Mock Teste");
         dto.setEmail("mock@teste.com");
-        dto.setPassword("123456");
-        dto.setRole(UserRole.USER);
-
+        dto.setCpf("12345678901");
+        dto.setContact("81900000009");
         // Preparação do objeto Client e DTO de resposta simulados
-        Client clientMock = new Client();
+        Client clientMock = new Client(dto);
         clientMock.setId(UUID.randomUUID());
-        clientMock.setName("Mock Teste");
-        
+
 
         // Simulando o serviço
         when(clientService.insert(any(ClientRequestDTO.class))).thenReturn(clientMock);

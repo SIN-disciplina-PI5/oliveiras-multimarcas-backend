@@ -1,9 +1,7 @@
 package pi.oliveiras_multimarcas.dto;
 
 import org.junit.jupiter.api.Test;
-import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
 
@@ -18,7 +16,6 @@ class ClientResponseDTOTest {
         client.setId(UUID.randomUUID());
         client.setName("João");
         client.setEmail("joao@teste.com");
-        client.setRole(UserRole.USER); 
 
         ClientResponseDTO dto = new ClientResponseDTO(client);
 
@@ -26,6 +23,5 @@ class ClientResponseDTOTest {
         assertEquals(client.getId(), dto.getId());
         assertEquals(client.getName(), dto.getName());
         assertEquals(client.getEmail(), dto.getEmail());
-        assertEquals(client.getRole(), dto.getRole());
     }
 }

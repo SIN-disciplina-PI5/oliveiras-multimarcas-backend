@@ -3,9 +3,9 @@ package pi.oliveiras_multimarcas.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
-import pi.oliveiras_multimarcas.DTO.AppointmentResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentResponseDTO;
+import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -35,10 +35,10 @@ public class AppointmentService {
     public AppointmentResponseDTO insert(AppointmentRequestDTO dto) { //
         // 1. Busca as entidades relacionadas
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
-                .orElseThrow(() -> new EntityNotFoundException("Veículo")); //
+                .orElseThrow(() -> new NoSuchException("Veículo")); //
 
         Client client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente")); //
+                .orElseThrow(() -> new NoSuchException("Cliente")); //
 
         // 2. Cria a entidade Appointment
         Appointment appointment = new Appointment(dto, vehicle, client); //
@@ -58,7 +58,7 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public AppointmentResponseDTO findById(UUID id) {
         Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Agendamento")); //
+                .orElseThrow(() -> new NoSuchException("Agendamento")); //
         return new AppointmentResponseDTO(appointment);
     }
 
@@ -72,7 +72,7 @@ public class AppointmentService {
     @Transactional
     public AppointmentResponseDTO updateStatus(UUID id, Status status) { //
         Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Agendamento")); //
+                .orElseThrow(() -> new NoSuchException("Agendamento")); //
 
         appointment.setStatus(status);
         Appointment updatedAppointment = appointmentRepository.save(appointment);
@@ -83,7 +83,7 @@ public class AppointmentService {
     @Transactional
     public void deleteById(UUID id) {
         if (!appointmentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Agendamento"); //
+            throw new NoSuchException("Agendamento"); //
         }
         appointmentRepository.deleteById(id);
     }

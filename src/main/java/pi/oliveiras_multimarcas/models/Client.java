@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.SignupRequestDTO;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -14,8 +14,13 @@ import pi.oliveiras_multimarcas.models.enums.UserRole;
 @Setter
 public class Client extends User{
 
-    public Client(SignupRequestDTO dto, String contact){
-        super(dto,contact, UserRole.USER);
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Sale> sales;
+    public Client(ClientRequestDTO dto){
+        super(dto);
     }
 
 }

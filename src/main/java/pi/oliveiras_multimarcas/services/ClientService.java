@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
+import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 
@@ -32,7 +31,7 @@ public class ClientService {
 
         return clientRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente"));
+                .orElseThrow(() -> new NoSuchException("Cliente"));
     }
 
     @Transactional
@@ -44,22 +43,23 @@ public class ClientService {
 
     @Transactional
     public Client updateById(UUID id, ClientRequestDTO dto) {
-        clientRepository
+        Client client = clientRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
+                .orElseThrow(() -> new NoSuchException("Usuário"));
 
-        Client client = toEntity(dto);
-        client.setId(id);
-        client = clientRepository
-                .save(client);
-        return client;
+        client.setName(dto.getName());
+        client.setEmail(dto.getEmail());
+        client.setContact(dto.getContact());
+        client.setCpf(dto.getCpf());
+
+        return clientRepository.save(client);
     }
 
     @Transactional
     public void deleteById(UUID id) {
         if (!clientRepository
                 .existsById(id)) {
-            throw new EntityNotFoundException("Usuário");
+            throw new NoSuchException("Usuário");
         }
         clientRepository
                 .deleteById(id);
@@ -68,14 +68,15 @@ public class ClientService {
     public Client findByEmail(String email) {
         return clientRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
+                .orElseThrow(() -> new NoSuchException("Usuário"));
     }
 
     private Client toEntity(ClientRequestDTO dto) {
         Client client = new Client();
-        client.setName(dto.getUsername());
+        client.setName(dto.getName());
         client.setEmail(dto.getEmail());
         client.setContact(dto.getContact());
+        client.setCpf(dto.getCpf());
         return client;
     }
 }

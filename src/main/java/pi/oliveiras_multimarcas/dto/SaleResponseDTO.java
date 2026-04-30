@@ -1,12 +1,11 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Sale;
-import pi.oliveiras_multimarcas.models.Vehicle;
+
 import java.util.Date;
 import java.util.UUID;
 

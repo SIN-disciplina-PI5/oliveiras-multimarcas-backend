@@ -54,12 +54,13 @@ public class EmployeeControllerIT {
      * @return O ID do funcionário salvo.
      */
     private UUID createAndSaveEmployee() {
-        pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO dto = new pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO();
+        pi.oliveiras_multimarcas.dto.EmployeeRequestDTO dto = new pi.oliveiras_multimarcas.dto.EmployeeRequestDTO();
         dto.setName("Funcionario Aux");
         dto.setEmail("aux@empresa.com");
         dto.setPassword("senha_segura_123");
         dto.setContact("81999999999");
         dto.setPosition("Vendedor");
+        dto.setCpf("12345678123");
         dto.setRole(UserRole.ADMIN);
 
         Employee saved = employeeService.insert(dto);
@@ -69,21 +70,22 @@ public class EmployeeControllerIT {
     /**
      * Helper para realizar um POST na rota e retornar o ResultActions (para o encadeamento de andExpect).
      */
-    private ResultActions postEmployee(String email, String name, String password) throws Exception {
+    private ResultActions postEmployee(String email, String name, String password, String cpf, String contact) throws Exception {
         String json = String.format("""
             {
                 "name": "%s",
                 "email": "%s",
                 "password": "%s",
-                "contact": "81900000000",
+                "cpf":"%s",
+                "contact": "%s",
                 "position": "Estoquista",
                 "role": "ADMIN" 
             }
-        """, name, email, password);
+        """, name, email, password, cpf, contact);
 
         // Retorna ResultActions para permitir o encadeamento de .andExpect()
         return mockMvc.perform(
-                post("/employes")
+                post("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         );
@@ -91,12 +93,12 @@ public class EmployeeControllerIT {
 
 
     @Test
-    @DisplayName("GET /employes - Deve retornar lista de funcionários")
+    @DisplayName("GET /employees - Deve retornar lista de funcionários")
     void findAll_ShouldReturnList() throws Exception {
         // Setup: cria um funcionário
         UUID id = createAndSaveEmployee();
 
-        mockMvc.perform(get("/employes"))
+        mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
@@ -105,30 +107,30 @@ public class EmployeeControllerIT {
     }
 
     @Test
-    @DisplayName("GET /employes/{id} - Deve retornar funcionário quando ID existir")
+    @DisplayName("GET /employees/{id} - Deve retornar funcionário quando ID existir")
     void findById_ShouldReturnEmployee_WhenIdExists() throws Exception {
         UUID id = createAndSaveEmployee();
 
-        mockMvc.perform(get("/employes/{id}", id))
+        mockMvc.perform(get("/employees/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.name").value("Funcionario Aux"));
     }
 
     @Test
-    @DisplayName("GET /employes/{id} - Deve retornar 404 quando ID não existir")
+    @DisplayName("GET /employees/{id} - Deve retornar 404 quando ID não existir")
     void findById_ShouldReturn404_WhenIdDoesNotExist() throws Exception {
-        mockMvc.perform(get("/employes/{id}", UUID.randomUUID()))
+        mockMvc.perform(get("/employees/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("POST /employes - Deve retornar 201 para payload válido e verificar criptografia")
+    @DisplayName("POST /employees - Deve retornar 201 para payload válido e verificar criptografia")
     void insert_ShouldReturn201_WhenPayloadIsValid() throws Exception {
         String email = "joao.silva@empresa.com";
         String password = "SenhaSegura123";
 
-        MvcResult result = postEmployee(email, "João da Silva", password)
+        MvcResult result = postEmployee(email, "João da Silva", password, "12345678912", "81900000012")
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("João da Silva"))
                 .andExpect(jsonPath("$.email").value(email))
@@ -140,22 +142,22 @@ public class EmployeeControllerIT {
     }
 
     @Test
-    @DisplayName("POST /employes - Deve retornar 400 se faltar nome, email ou password (checa no controller)")
+    @DisplayName("POST /employees - Deve retornar 400 se faltar nome, email ou password (checa no controller)")
     void insert_ShouldReturn400_WhenRequiredFieldsAreNull() throws Exception {
         // name, email, password serão null
         String jsonWithNullFields = "{}";
 
-        mockMvc.perform(post("/employes")
+        mockMvc.perform(post("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonWithNullFields))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("PUT /employes/{id} - Deve retornar 200 e atualizar funcionário")
+    @DisplayName("PUT /employees/{id} - Deve retornar 200 e atualizar funcionário")
     void updateById_ShouldReturn200_WhenValid() throws Exception {
         // 1. Cria o funcionário inicial e obtém o ID
-        MvcResult initialResult = postEmployee("inicial@empresa.com", "Nome Inicial", "senhaInicial123")
+        MvcResult initialResult = postEmployee("inicial@empresa.com", "Nome Inicial", "senhaInicial123", "12345678919", "8190000013")
                 .andExpect(status().isCreated())
                 .andReturn();
         UUID id = UUID.fromString(JsonPath.read(initialResult.getResponse().getContentAsString(), "$.id"));
@@ -168,12 +170,13 @@ public class EmployeeControllerIT {
                 "email": "%s",
                 "password": "%s",
                 "contact": "81900000000",
+                "cpf":"12345678919",
                 "position": "Gerente Atualizado",
-                "role": "ADMIN" 
+                "role": "ADMIN"
             }
         """, updatedEmail, newPassword);
 
-        mockMvc.perform(put("/employes/{id}", id)
+        mockMvc.perform(put("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateJson))
                 .andExpect(status().isOk())
@@ -187,7 +190,7 @@ public class EmployeeControllerIT {
     }
 
     @Test
-    @DisplayName("PUT /employes/{id} - Deve retornar 404 quando ID não existir no update")
+    @DisplayName("PUT /employees/{id} - Deve retornar 404 quando ID não existir no update")
     void updateById_ShouldReturn404_WhenIdDoesNotExist() throws Exception {
         String updateJson = """
             {
@@ -200,36 +203,33 @@ public class EmployeeControllerIT {
             }
         """;
 
-        mockMvc.perform(put("/employes/{id}", UUID.randomUUID())
+        mockMvc.perform(put("/employees/{id}", UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateJson))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Usuário não encontrado"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("DELETE /employes/{id} - Deve retornar 200 ao deletar funcionário existente")
+    @DisplayName("DELETE /employees/{id} - Deve retornar 200 ao deletar funcionário existente")
     void deleteById_ShouldReturn200_WhenIdExists() throws Exception {
         // 1. Cria o funcionário inicial e obtém o ID
-        MvcResult initialResult = postEmployee("para_deletar@empresa.com", "Para Deletar", "delete123")
+        MvcResult initialResult = postEmployee("para_deletar@empresa.com", "Para Deletar", "delete123", "12345678917", "81900000018")
                 .andExpect(status().isCreated())
                 .andReturn();
         UUID id = UUID.fromString(JsonPath.read(initialResult.getResponse().getContentAsString(), "$.id"));
 
         // 2. Deleta o recurso
-        mockMvc.perform(delete("/employes/{id}", id))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Usuário deletado"));
+        mockMvc.perform(delete("/employees/{id}", id))
+                .andExpect(status().isOk());
 
         // 3. Verifica se foi realmente deletado
         assertFalse(employeeRepository.existsById(id));
     }
 
     @Test
-    @DisplayName("DELETE /employes/{id} - Deve retornar 404 se o ID não existir")
+    @DisplayName("DELETE /employees/{id} - Deve retornar 404 se o ID não existir")
     void deleteById_ShouldReturn404_WhenIdDoesNotExist() throws Exception {
-        mockMvc.perform(delete("/employes/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string("Usuário não encontrado"));
+        mockMvc.perform(delete("/employees/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound());
     }
 }

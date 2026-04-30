@@ -3,8 +3,8 @@ package pi.oliveiras_multimarcas.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.SaleRequestDTO;
+import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Sale;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -32,7 +32,7 @@ public class SaleService {
     @Transactional(readOnly = true)
     public Sale findById(UUID id){
         return SaleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
+                .orElseThrow(() -> new NoSuchException("Usuário"));
     }
 
     @Transactional
@@ -45,7 +45,7 @@ public class SaleService {
     @Transactional
     public Sale updateById(UUID id, SaleRequestDTO dto) {
         SaleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário"));
+                .orElseThrow(() -> new NoSuchException("Usuário"));
 
         Sale sale = toEntity(dto);
         sale.setId(id);
@@ -56,7 +56,7 @@ public class SaleService {
     @Transactional
     public void deleteById(UUID id){
         if(!SaleRepository.existsById(id)){
-            throw new EntityNotFoundException("Usuário");
+            throw new NoSuchException("Usuário");
         }
         SaleRepository.deleteById(id);
     }

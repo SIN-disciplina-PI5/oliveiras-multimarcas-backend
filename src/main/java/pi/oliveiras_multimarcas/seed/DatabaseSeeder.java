@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import pi.oliveiras_multimarcas.DTO.*;
+import pi.oliveiras_multimarcas.dto.*;
 import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.*;
@@ -97,6 +97,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         employee1.setName("epamilondas");
         employee1.setPosition("vendedor");
         employee1.setContact("081900000000");
+        employee1.setCpf("12345678902");
         employee1.setRole(UserRole.ADMIN);
 
         employeeService.insert(employee1);
@@ -107,22 +108,23 @@ public class DatabaseSeeder implements CommandLineRunner {
         employee2.setName("Josefa");
         employee2.setPosition("vendedor");
         employee2.setContact("081900000001");
+        employee2.setCpf("12345678903");
         employee2.setRole(UserRole.ADMIN);
 
         employeeService.insert(employee2);
 
         ClientRequestDTO client1 = new ClientRequestDTO();
-        client1.setUsername("Paulinha");
+        client1.setName("Paulinha");
         client1.setEmail("paulinha@gmail.com");
         client1.setContact("081900000002");
-
+        client1.setCpf("12345678900");
         clientService.insert(client1);
 
         ClientRequestDTO client2 = new ClientRequestDTO();
-        client2.setUsername("Roberval");
+        client2.setName("Roberval");
         client2.setEmail("roberval@gmail.com");
         client2.setContact("081900000003");
-
+        client2.setCpf("12345678901");
         clientService.insert(client2);
 
         SaleRequestDTO sale1 = new SaleRequestDTO();

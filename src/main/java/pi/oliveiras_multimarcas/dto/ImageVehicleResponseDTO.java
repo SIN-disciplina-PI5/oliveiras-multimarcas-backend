@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

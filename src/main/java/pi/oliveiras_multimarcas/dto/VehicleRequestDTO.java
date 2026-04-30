@@ -1,6 +1,5 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -34,7 +33,6 @@ public class VehicleRequestDTO {
     private String description;
 
     @NotNull(message = "A quilometragem é obrigatória")
-    @Min(value = 0, message = "A quilometragem não pode ser negativa")
     private Integer mileage;
 
     @NotBlank(message = "A marca é obrigatória")

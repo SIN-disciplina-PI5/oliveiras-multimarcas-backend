@@ -19,9 +19,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(NoSuchException.class)
     public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(
-            EntityNotFoundException ex,
+            NoSuchException ex,
             HttpServletRequest request) {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse(

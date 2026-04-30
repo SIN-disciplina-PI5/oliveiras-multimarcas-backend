@@ -10,9 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.repositories.AppointmentRepository; // Importação Necessária
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 
@@ -57,8 +56,8 @@ public class ClientControllerIT {
         Client client = new Client();
         client.setName("Test Client");
         client.setEmail("test@email.com");
-        client.setPassword("password");
-        client.setRole(UserRole.USER);
+        client.setContact("81900120023");
+        client.setCpf("12345678812");
         clientRepository.save(client);
 
         mockMvc.perform(get("/clients"))
@@ -84,8 +83,8 @@ public class ClientControllerIT {
         Client client = new Client();
         client.setName("Test Client");
         client.setEmail("test@email.com");
-        client.setPassword("password");
-        client.setRole(UserRole.USER);
+        client.setCpf("12345678112");
+        client.setContact("81911119181");
         Client savedClient = clientRepository.save(client);
 
         mockMvc.perform(get("/clients/{id}", savedClient.getId()))
@@ -105,10 +104,10 @@ public class ClientControllerIT {
     @DisplayName("POST /clients - Deve retornar 201 para payload válido e verificar criptografia")
     void insert_ShouldReturn201_WhenPayloadIsValid() throws Exception {
         ClientRequestDTO requestDTO = new ClientRequestDTO();
-        requestDTO.setUsername("New Client");
+        requestDTO.setName("New Client");
         requestDTO.setEmail("new@email.com");
-        requestDTO.setPassword("secret123");
-        requestDTO.setRole(UserRole.USER);
+        requestDTO.setCpf("12345678901");
+        requestDTO.setContact("81900100009");
 
         mockMvc.perform(post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -118,7 +117,6 @@ public class ClientControllerIT {
                 .andExpect(jsonPath("$.email").value("new@email.com"));
 
         Client savedClient = clientRepository.findByEmail("new@email.com").orElseThrow();
-        assertNotEquals("secret123", savedClient.getPassword(), "A senha deve estar criptografada");
         assertEquals("New Client", savedClient.getName());
     }
 
@@ -128,8 +126,6 @@ public class ClientControllerIT {
         // Caso 1: Falta Username
         ClientRequestDTO noName = new ClientRequestDTO();
         noName.setEmail("valid@email.com");
-        noName.setPassword("password");
-        noName.setRole(UserRole.USER); // Adicionado para garantir que o erro é só do username
 
         mockMvc.perform(post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -138,9 +134,7 @@ public class ClientControllerIT {
 
         // Caso 2: Falta Email
         ClientRequestDTO noEmail = new ClientRequestDTO();
-        noEmail.setUsername("User");
-        noEmail.setPassword("password");
-        noEmail.setRole(UserRole.USER); // Adicionado para garantir que o erro é só do email
+        noEmail.setName("User");
 
         mockMvc.perform(post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -152,29 +146,12 @@ public class ClientControllerIT {
     @DisplayName("POST /clients - Deve retornar 400 para email inválido")
     void insert_ShouldReturn400_WhenEmailIsInvalid() throws Exception {
         ClientRequestDTO invalidEmail = new ClientRequestDTO();
-        invalidEmail.setUsername("User");
+        invalidEmail.setName("User");
         invalidEmail.setEmail("invalid-email");
-        invalidEmail.setPassword("password");
-        invalidEmail.setRole(UserRole.USER); // Importante: Role válida para isolar erro de email
 
         mockMvc.perform(post("/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidEmail)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("POST /clients - Deve retornar 400 para senha curta")
-    void insert_ShouldReturn400_WhenPasswordIsShort() throws Exception {
-        ClientRequestDTO shortPass = new ClientRequestDTO();
-        shortPass.setUsername("User");
-        shortPass.setEmail("valid@email.com");
-        shortPass.setPassword("123");
-        shortPass.setRole(UserRole.USER); // Importante: Role válida para isolar erro de senha
-
-        mockMvc.perform(post("/clients")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(shortPass)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -184,15 +161,15 @@ public class ClientControllerIT {
         Client client = new Client();
         client.setName("Old Name");
         client.setEmail("old@email.com");
-        client.setPassword("oldpass");
-        client.setRole(UserRole.USER);
+        client.setCpf("12345678112");
+        client.setContact("81911112948");
         Client saved = clientRepository.save(client);
 
         ClientRequestDTO updateDTO = new ClientRequestDTO();
-        updateDTO.setUsername("Updated Name");
+        updateDTO.setName("Updated Name");
         updateDTO.setEmail("updated@email.com");
-        updateDTO.setPassword("newpass");
-        updateDTO.setRole(UserRole.USER);
+        updateDTO.setCpf("12345678112");
+        updateDTO.setContact("81911112948");
 
         mockMvc.perform(put("/clients/{id}", saved.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -209,11 +186,10 @@ public class ClientControllerIT {
     @DisplayName("PUT /clients/{id} - Deve retornar 404 quando ID não existir")
     void updateById_ShouldReturn404_WhenIdDoesNotExist() throws Exception {
         ClientRequestDTO updateDTO = new ClientRequestDTO();
-        updateDTO.setUsername("Name");
+        updateDTO.setName("Name");
         updateDTO.setEmail("email@test.com");
-        updateDTO.setPassword("password");
-        // ADICIONE ESTA LINHA: Define uma role válida
-        updateDTO.setRole(UserRole.USER);
+        updateDTO.setCpf("12345678903");
+        updateDTO.setContact("81900100102");
 
         // Agora o objeto é válido, então o Spring deixa passar para o Controller,
         // que vai procurar o ID, não achar, e retornar 404 (sucesso do teste).
@@ -229,8 +205,8 @@ public class ClientControllerIT {
         Client client = new Client();
         client.setName("To Delete");
         client.setEmail("delete@email.com");
-        client.setPassword("password");
-        client.setRole(UserRole.USER);
+        client.setCpf("12345678905");
+        client.setContact("81903020000");
         Client saved = clientRepository.save(client);
 
         mockMvc.perform(delete("/clients/{id}", saved.getId()))

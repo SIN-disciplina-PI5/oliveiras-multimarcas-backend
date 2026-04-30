@@ -1,13 +1,10 @@
 package pi.oliveiras_multimarcas.controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
-import pi.oliveiras_multimarcas.DTO.EmployeeResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.dto.EmployeeResponseDTO;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.services.EmployeeService;
 

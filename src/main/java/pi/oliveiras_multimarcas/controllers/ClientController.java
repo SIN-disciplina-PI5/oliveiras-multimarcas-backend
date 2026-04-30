@@ -4,10 +4,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.ClientRequestDTO;
-import pi.oliveiras_multimarcas.DTO.ClientResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientResponseDTO;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.services.ClientService;
 
@@ -37,7 +35,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> insert(@RequestBody @Valid ClientRequestDTO clientRequestDTO) {
-        if (clientRequestDTO.getUsername() == null || clientRequestDTO.getEmail() == null || clientRequestDTO.getPassword() == null) {
+        if (clientRequestDTO.getName() == null || clientRequestDTO.getEmail() == null) {
             return ResponseEntity.badRequest().build();
         }
         Client client = clientService.insert(clientRequestDTO);

@@ -1,11 +1,10 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.UUID;
 
@@ -17,11 +16,14 @@ public class ClientResponseDTO {
     private UUID id;
     private String name; 
     private String email;
-    private UserRole role; 
+    private String contact;
+    private String cpf;
 
     public ClientResponseDTO(Client client) {
-        this.id = client.getId();
-        this.name = client.getName();
-        this.email = client.getEmail();
+        id = client.getId();
+        name = client.getName();
+        email = client.getEmail();
+        contact = client.getContact();
+        cpf = client.getCpf();
     }
 }

@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.repositories.EmployeeRepository;
 
@@ -61,7 +61,7 @@ class EmployeeServiceTest {
     void testFindByIdNotFound() {
         when(employeeRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.findById(UUID.randomUUID()));
+        assertThrows(NoSuchException.class, () -> employeeService.findById(UUID.randomUUID()));
     }
 
     @Test
@@ -112,7 +112,7 @@ class EmployeeServiceTest {
     void testUpdateByIdNotFound() {
         when(employeeRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> {
+        assertThrows(NoSuchException.class, () -> {
             employeeService.updateById(UUID.randomUUID(), new EmployeeRequestDTO());
         });
     }
@@ -132,7 +132,7 @@ class EmployeeServiceTest {
     void testDeleteByIdNotFound() {
         when(employeeRepository.existsById(any())).thenReturn(false);
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.deleteById(UUID.randomUUID()));
+        assertThrows(NoSuchException.class, () -> employeeService.deleteById(UUID.randomUUID()));
     }
 
     @Test
@@ -151,6 +151,6 @@ class EmployeeServiceTest {
     void testFindByEmailNotFound() {
         when(employeeRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> employeeService.findByEmail("x@x.com"));
+        assertThrows(NoSuchException.class, () -> employeeService.findByEmail("x@x.com"));
     }
 }

@@ -1,40 +1,36 @@
-package pi.oliveiras_multimarcas.unit;
+package pi.oliveiras_multimarcas.unit; 
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import pi.oliveiras_multimarcas.DTO.SignupRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Client;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 public class ClientTests {
 
     @Test
     void deveCriarClientCorretamenteAPartirDoDTO() {
         // Arrange (dados de entrada)
-        SignupRequestDTO dto = new SignupRequestDTO();
+        ClientRequestDTO dto = new ClientRequestDTO();
         dto.setName("Marília");
         dto.setEmail("marilia@example.com");
-        dto.setPassword("senha123");
-
-        String contact = "81999999999";
+        dto.setCpf("12345678912");
+        dto.setContact("81900000006");
 
         // Act (ação)
-        Client client = new Client(dto, contact);
+        Client client = new Client(dto);
 
         // Assert (validações)
         assertNotNull(client);
         assertEquals("Marília", client.getName());
         assertEquals("marilia@example.com", client.getEmail());
-        assertEquals("senha123", client.getPassword());
-        assertEquals(contact, client.getContact());
-        assertEquals(UserRole.USER, client.getRole());
+        assertEquals("81900000006", client.getContact());
     }
 
     @Test
     void deveAlterarNomeDoClient() {
-        SignupRequestDTO dto = new SignupRequestDTO();
-        Client client = new Client(dto, "81999999999");
+        ClientRequestDTO dto = new ClientRequestDTO();
+        Client client = new Client(dto);
 
         client.setName("Novo Nome");
 

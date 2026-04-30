@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
-import pi.oliveiras_multimarcas.DTO.VehicleResponseDTO;
-import pi.oliveiras_multimarcas.exceptions.EntityNotFoundException;
+import pi.oliveiras_multimarcas.dto.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.dto.VehicleResponseDTO;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.services.VehicleService;
 import pi.oliveiras_multimarcas.services.VehicleViewService;
@@ -26,7 +25,7 @@ public class VehicleControllers {
     @Autowired
     private VehicleViewService vehicleViewService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<VehicleResponseDTO>> findAll() {
         List<Vehicle> vehicles = vehicleService.findAll();
         List<VehicleResponseDTO> vehiclesResponseDTO = vehicles.stream()
