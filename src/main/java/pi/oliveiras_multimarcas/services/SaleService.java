@@ -3,7 +3,7 @@ package pi.oliveiras_multimarcas.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
+import pi.oliveiras_multimarcas.dto.SaleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Sale;

@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.*;
-import pi.oliveiras_multimarcas.models.Client;
+import pi.oliveiras_multimarcas.dto.*;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.security.JwtUtil;
 import pi.oliveiras_multimarcas.services.ClientService;
@@ -58,7 +57,6 @@ public class AuthControllers {
         Boolean success = (Boolean) response.get("success");
 
         if (!Boolean.TRUE.equals(success)) {
-            System.out.println("Erro recaptcha: " + response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -80,7 +78,7 @@ public class AuthControllers {
         }
 
         String refreshToken = jwtUtil.generateTokenRefresh(employee.getId(), employee.getEmail());
-        String accessToken = jwtUtil.generateTokenAcess(employee.getId(), employee.getEmail());
+        String accessToken = jwtUtil.generateTokenAccess(employee.getId(), employee.getEmail());
 
         tokenService.insert(refreshToken, employee.getId());
 
@@ -121,8 +119,8 @@ public class AuthControllers {
         UUID id = UUID.fromString(userId.toString());
 
         Employee employee = employeeService.findById(id);
-        RefreshTokenResponseDTO acessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAcess(id, employee.getEmail()));
-        return ResponseEntity.ok().body(acessToken);
+        RefreshTokenResponseDTO accessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAccess(id, employee.getEmail()));
+        return ResponseEntity.ok().body(accessToken);
     }
 
     @PostMapping("/validate")

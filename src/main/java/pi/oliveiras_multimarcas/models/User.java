@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.SignupRequestDTO;
-import pi.oliveiras_multimarcas.models.enums.UserRole;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 
 import java.util.UUID;
 
@@ -35,18 +34,24 @@ public abstract class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column // Opcional, por isso sem 'nullable = false'
+    @Column(unique = true, nullable = false)
     private String contact;
-    public User(SignupRequestDTO dto,String contact, UserRole role){
-        name = dto.getName();
-        email = dto.getEmail();
-        this.contact = contact;
-    }
 
-    public User(String name, String email, String contact){
+    @Column(unique = true, nullable = false)
+    private String cpf;
+
+    public User(String name, String email, String contact, String cpf){
         this.name = name;
         this.email = email;
         this.contact = contact;
+        this.cpf = cpf;
+    }
+
+    public User (ClientRequestDTO dto){
+        name = dto.getName();
+        email = dto.getEmail();
+        contact = dto.getContact();
+        cpf = dto.getCpf();
     }
 
 }

@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

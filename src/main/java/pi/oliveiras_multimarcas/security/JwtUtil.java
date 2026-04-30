@@ -19,7 +19,7 @@ public class JwtUtil {
     private String SECRET_ACCESS;
 
     @Value("${expiration_access}")
-    private long EXPIRATION_ACESS;
+    private long EXPIRATION_ACCESS;
 
     @Value("${secret_refresh}")
     private String SECRET_REFRESH;
@@ -31,7 +31,7 @@ public class JwtUtil {
         return Algorithm.HMAC256(secretKey);
     }
 
-    public String generateTokenAcess(UUID id, String email){
+    public String generateTokenAccess(UUID id, String email){
         Map<String, Object> claim = Map.of(
                 "id", id.toString()
         );
@@ -40,7 +40,7 @@ public class JwtUtil {
                 .withSubject(email)
                 .withPayload(claim)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_ACESS))
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_ACCESS))
                 .sign(getAlgorithm(SECRET_ACCESS));
     }
 
@@ -61,7 +61,7 @@ public class JwtUtil {
 
         String secret;
 
-        if ("acess".equals(typeToken)) {
+        if ("access".equals(typeToken)) {
             secret = SECRET_ACCESS;
         } else if ("refresh".equals(typeToken)) {
             secret = SECRET_REFRESH;
@@ -85,7 +85,7 @@ public class JwtUtil {
 
         String secret;
 
-        if ("acess".equals(typeToken)) {
+        if ("access".equals(typeToken)) {
             secret = SECRET_ACCESS;
         } else if ("refresh".equals(typeToken)) {
             secret = SECRET_REFRESH;
@@ -108,7 +108,7 @@ public class JwtUtil {
 
         String secret;
 
-        if ("acess".equals(typeToken)) {
+        if ("access".equals(typeToken)) {
             secret = SECRET_ACCESS;
         } else if ("refresh".equals(typeToken)) {
             secret = SECRET_REFRESH;

@@ -1,11 +1,10 @@
 package pi.oliveiras_multimarcas.controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.SaleRequestDTO;
-import pi.oliveiras_multimarcas.DTO.SaleResponseDTO;
+import pi.oliveiras_multimarcas.dto.SaleRequestDTO;
+import pi.oliveiras_multimarcas.dto.SaleResponseDTO;
 import pi.oliveiras_multimarcas.models.Sale;
 import pi.oliveiras_multimarcas.services.SaleService;
 

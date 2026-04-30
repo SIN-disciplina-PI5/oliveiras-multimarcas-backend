@@ -1,11 +1,10 @@
 package pi.oliveiras_multimarcas.controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pi.oliveiras_multimarcas.DTO.AppointmentRequestDTO;
-import pi.oliveiras_multimarcas.DTO.AppointmentResponseDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentResponseDTO;
 import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.services.AppointmentService;
 

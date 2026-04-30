@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pi.oliveiras_multimarcas.DTO.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.repositories.EmployeeRepository;
@@ -77,6 +77,7 @@ public class EmployeeService {
         user.setRole(dto.getRole());
         user.setPosition(dto.getPosition());
         user.setContact(dto.getContact());
+        user.setCpf(dto.getCpf());
         return user;
     }
 }

@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO; // ESTA LINHA É OBRIGATÓRIA
+package pi.oliveiras_multimarcas.dto; // ESTA LINHA É OBRIGATÓRIA
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;

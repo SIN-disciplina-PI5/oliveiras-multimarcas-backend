@@ -1,4 +1,4 @@
-package pi.oliveiras_multimarcas.DTO;
+package pi.oliveiras_multimarcas.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +18,8 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "A senha não pode estar em branco")
     @Size(min = 5, max = 20, message = "A senha deve ter entre 5 e 20 caracteres")
     private String password;
+
+    private String cpf;
 
     private String contact;
     private String position;

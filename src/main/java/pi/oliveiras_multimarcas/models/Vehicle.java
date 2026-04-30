@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.dto.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 
 @Entity

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import pi.oliveiras_multimarcas.DTO.VehicleRequestDTO;
+import pi.oliveiras_multimarcas.dto.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
