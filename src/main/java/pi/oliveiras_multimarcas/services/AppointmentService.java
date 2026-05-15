@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.dto.AppointmentResponseDTO;
+import pi.oliveiras_multimarcas.dto.AppointmentUpdateDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.exceptions.SchedulingConflictException;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -40,18 +42,25 @@ public class AppointmentService {
         Client client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new NoSuchException("Cliente")); //
 
-        // 2. Cria a entidade Appointment
+        // 2. Valida conflito de horário
+        boolean conflict = appointmentRepository.existsBySchedulingDateAndSchedulingTime(
+                dto.getSchedulingDate(), dto.getSchedulingTime());
+        if (conflict) {
+            throw new SchedulingConflictException();
+        }
+
+        // 3. Cria a entidade Appointment
         Appointment appointment = new Appointment(dto, vehicle, client); //
 
-        // 3. Define um status padrão (PENDING) se nenhum for enviado
+        // 4. Define um status padrão (PENDING) se nenhum for enviado
         if (dto.getStatus() == null) {
             appointment.setStatus(Status.PENDING); //
         }
 
-        // 4. Salva a entidade no banco
+        // 5. Salva a entidade no banco
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
-        // 5. Retorna o DTO de Resposta
+        // 6. Retorna o DTO de Resposta
         return new AppointmentResponseDTO(savedAppointment);
     }
 
@@ -81,10 +90,38 @@ public class AppointmentService {
     }
 
     @Transactional
+    public AppointmentResponseDTO update(UUID id, AppointmentUpdateDTO dto) {
+        // 1. Busca o agendamento existente
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchException("Agendamento"));
+
+        // 2. Valida conflito de horário (exclui o próprio agendamento)
+        boolean conflict = appointmentRepository.existsBySchedulingDateAndSchedulingTimeAndIdNot(
+                dto.getSchedulingDate(), dto.getSchedulingTime(), id);
+        if (conflict) {
+            throw new SchedulingConflictException();
+        }
+
+        // 3. Atualiza os campos permitidos
+        appointment.setSchedulingDate(dto.getSchedulingDate());
+        appointment.setSchedulingTime(dto.getSchedulingTime());
+        appointment.setDescription(dto.getDescription());
+
+        // 4. Atualiza o status se informado, caso contrário mantém o atual
+        if (dto.getStatus() != null) {
+            appointment.setStatus(dto.getStatus());
+        }
+
+        // 5. Salva e retorna
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+        return new AppointmentResponseDTO(updatedAppointment);
+    }
+
+    @Transactional
     public void deleteById(UUID id) {
         if (!appointmentRepository.existsById(id)) {
             throw new NoSuchException("Agendamento"); //
         }
         appointmentRepository.deleteById(id);
     }
-}
+}
