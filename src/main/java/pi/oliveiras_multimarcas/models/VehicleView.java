@@ -21,7 +21,7 @@ public class VehicleView {
     @Column
     private Date dateTime = new Date();
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="vehicle_id", nullable = false)
     private Vehicle vehicle;
 
