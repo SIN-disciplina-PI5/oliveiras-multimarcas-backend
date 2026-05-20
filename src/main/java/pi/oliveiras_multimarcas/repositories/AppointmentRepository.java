@@ -6,6 +6,7 @@ import pi.oliveiras_multimarcas.models.Appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,4 +17,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     // Verifica conflito de horário (para cenário de criação)
     boolean existsBySchedulingDateAndSchedulingTime(LocalDate schedulingDate, LocalTime schedulingTime);
+
+    List<Appointment> findBySchedulingDateBetweenOrderBySchedulingDateDesc(LocalDate startDate, LocalDate endDate);
 }
