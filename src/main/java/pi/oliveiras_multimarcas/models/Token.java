@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Token {
+public class Token extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

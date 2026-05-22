@@ -27,7 +27,7 @@ import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 @Getter
 @Setter
 @Table(name="veiculos")
-public class Vehicle {
+public class Vehicle extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
