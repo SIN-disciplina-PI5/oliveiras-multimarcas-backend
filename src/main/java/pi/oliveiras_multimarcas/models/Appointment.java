@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "appointments")
-public class Appointment {
+public class Appointment extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
