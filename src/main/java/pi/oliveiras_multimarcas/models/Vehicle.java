@@ -26,7 +26,6 @@ import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name="veiculos")
 public class Vehicle {
 
     @Id
@@ -47,6 +46,13 @@ public class Vehicle {
     private int mileage;
     @Column(nullable=false)
     private String mark;
+    @OneToMany(
+            mappedBy = "vehicle",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Appointment> appointments;
+    private boolean available = true;
 
     public Vehicle(VehicleRequestDTO dto){
         this.model = dto.getModel();
