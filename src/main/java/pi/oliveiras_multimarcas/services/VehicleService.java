@@ -2,7 +2,9 @@ package pi.oliveiras_multimarcas.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pi.oliveiras_multimarcas.dto.VehicleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.models.ImageVehicle;
 import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
 
@@ -54,16 +57,32 @@ public class VehicleService {
     }
 
     @Transactional
-    public Vehicle update(VehicleRequestDTO dto, UUID id){
+    public Vehicle update(VehicleRequestDTO dto, UUID id) {
 
-        Optional<Vehicle> vehicle = vehicleRepository.findById(id);
-        if(vehicle.isEmpty()) throw new NoSuchException("Veículo");
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new NoSuchException("Veículo"));
 
-        Vehicle newVehicle = new Vehicle(dto);
-        newVehicle.setId(id);
+        vehicle.setModel(dto.getModel());
+        vehicle.setPrice(dto.getPrice());
+        vehicle.setDescription(dto.getDescription());
+        vehicle.setMark(dto.getMark());
+        vehicle.setMileage(dto.getMileage());
+        vehicle.setModelYear(dto.getModelYear());
+        Set<String> existingUrls = vehicle.getUrl_images()
+                .stream()
+                .map(ImageVehicle::getUrl)
+                .collect(Collectors.toSet());
 
-        newVehicle = vehicleRepository.save(newVehicle);
-        return newVehicle;
+        for (String url : dto.getUrl_images()) {
 
+            if (!existingUrls.contains(url)) {
+
+                ImageVehicle image = new ImageVehicle(url, vehicle);
+
+                vehicle.getUrl_images().add(image);
+            }
+        }
+
+        return vehicleRepository.save(vehicle);
     }
 }

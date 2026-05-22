@@ -1,5 +1,7 @@
 package pi.oliveiras_multimarcas.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +19,12 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${cors.origins}")
+    private List<String> origins;
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers( HttpMethod.POST, "/clients").permitAll()
                         .requestMatchers(HttpMethod.POST, "/vehicles/view/**", "/vehicles/mostPopular").permitAll()
                         .requestMatchers( HttpMethod.PUT, "/clients").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/upload/").permitAll()
                         .requestMatchers("/sales/**", "/sales").authenticated()
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
@@ -47,7 +56,7 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -57,9 +66,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config
-                .setAllowedOrigins(List.of(
-                        "http://localhost:3000"
-                ));
+                .setAllowedOrigins(
+                        origins
+                );
 
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"

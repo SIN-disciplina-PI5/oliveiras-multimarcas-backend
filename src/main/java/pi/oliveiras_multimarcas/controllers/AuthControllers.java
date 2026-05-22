@@ -47,7 +47,7 @@ public class AuthControllers {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@Valid @RequestBody SignInRequestDTO dto){
+    public ResponseEntity<SignInResponseDTO> signin(@Valid @RequestBody SignInRequestDTO dto){
 
         Map<String, Object> response = recaptchaService.verify(dto.getRecaptchaToken());
 
@@ -121,11 +121,5 @@ public class AuthControllers {
         Employee employee = employeeService.findById(id);
         RefreshTokenResponseDTO accessToken = new RefreshTokenResponseDTO(jwtUtil.generateTokenAccess(id, employee.getEmail()));
         return ResponseEntity.ok().body(accessToken);
-    }
-
-    @PostMapping("/validate")
-    public ResponseEntity<Void> validateToken(){
-
-        return  ResponseEntity.ok().build();
     }
 }

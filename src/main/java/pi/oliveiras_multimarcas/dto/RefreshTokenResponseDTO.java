@@ -10,5 +10,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RefreshTokenResponseDTO {
-    private String acessToken;
+    private String accessToken;
 }

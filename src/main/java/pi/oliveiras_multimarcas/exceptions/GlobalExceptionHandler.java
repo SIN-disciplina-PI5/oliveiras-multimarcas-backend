@@ -82,7 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiErrorResponse errorResponse = new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Erro interno no servidor",
+                ex.getMessage(),
                 request.getRequestURI()
         );
 
