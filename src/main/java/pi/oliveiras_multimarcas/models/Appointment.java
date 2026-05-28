@@ -19,17 +19,17 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "appointments")
-public class Appointment {
+public class Appointment extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 

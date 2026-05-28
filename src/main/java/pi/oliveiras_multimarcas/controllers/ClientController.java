@@ -26,6 +26,13 @@ public class ClientController {
         return ResponseEntity.ok(clientResponseDTOS);
     }
 
+    @GetMapping("/latest")
+    public ResponseEntity<List<ClientResponseDTO>> findLatestClients(){
+        List<Client> clients = clientService.findLatestClients();
+        List<ClientResponseDTO> clientResponseDTOS = clients.stream().map(ClientResponseDTO::new).toList();
+        return ResponseEntity.ok(clientResponseDTOS);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDTO> findById(@PathVariable UUID id) {
         Client client = clientService.findById(id);

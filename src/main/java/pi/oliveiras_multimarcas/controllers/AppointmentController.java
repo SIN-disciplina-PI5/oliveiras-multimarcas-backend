@@ -1,11 +1,13 @@
 package pi.oliveiras_multimarcas.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.dto.AppointmentResponseDTO;
-import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
+import pi.oliveiras_multimarcas.dto.AppointmentUpdateDTO;
+import pi.oliveiras_multimarcas.models.enums.Status;
 import pi.oliveiras_multimarcas.services.AppointmentService;
 
 import java.net.URI;
@@ -39,10 +41,18 @@ public class AppointmentController {
         return ResponseEntity.ok(appointment);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(
+            @PathVariable UUID id,
+            @Valid @RequestBody AppointmentUpdateDTO dto) {
+        AppointmentResponseDTO updatedAppointment = appointmentService.update(id, dto);
+        return ResponseEntity.ok(updatedAppointment);
+    }
+
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateStatus(
             @PathVariable UUID id,
-            @RequestParam AppointmentStatus status) { //
+            @RequestParam Status status) { //
         AppointmentResponseDTO updatedAppointment = appointmentService.updateStatus(id, status);
         return ResponseEntity.ok(updatedAppointment);
     }
@@ -53,4 +63,3 @@ public class AppointmentController {
         return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
 }
-   

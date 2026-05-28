@@ -41,6 +41,11 @@ public class ClientService {
         return client;
     }
 
+    @Transactional(readOnly = true)
+    public List<Client> findLatestClients(){
+        return clientRepository.findTop3ByOrderByCreatedAtDesc();
+    }
+
     @Transactional
     public Client updateById(UUID id, ClientRequestDTO dto) {
         Client client = clientRepository

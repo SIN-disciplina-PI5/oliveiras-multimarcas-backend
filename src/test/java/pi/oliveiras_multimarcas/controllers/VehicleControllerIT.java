@@ -228,4 +228,88 @@ public class VehicleControllerIT {
         )
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void shouldRegisterVehicleView() throws Exception {
+        // 1. Cria um veículo
+        String json = """
+            {
+                "model": "HB20 Comfort",
+                "modelYear": 2021,
+                "price": 72000.00,
+                "url_images": [
+                    "https://example.com/images/hb20_front.jpg"
+                ],
+                "description": "Hatch compacto confortável.",
+                "mileage": 15000,
+                "mark": "Hyundai"
+            }
+        """;
+
+        MvcResult result = mockMvc.perform(
+                        post("/vehicles/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
+
+        // 2. Registra uma visualização
+        mockMvc.perform(
+                        post("/vehicles/view/" + id)
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenRegisteringViewForInvalidVehicle() throws Exception {
+        mockMvc.perform(
+                        post("/vehicles/view/" + UUID.randomUUID())
+                )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturnMostPopularVehicles() throws Exception {
+        // 1. Cria um veículo
+        String json = """
+            {
+                "model": "Onix Plus",
+                "modelYear": 2022,
+                "price": 85000.00,
+                "url_images": [
+                    "https://example.com/images/onix_front.jpg"
+                ],
+                "description": "Sedan compacto da Chevrolet.",
+                "mileage": 10000,
+                "mark": "Chevrolet"
+            }
+        """;
+
+        MvcResult result = mockMvc.perform(
+                        post("/vehicles/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
+
+        // 2. Registra algumas visualizações para popular a tabela
+        mockMvc.perform(post("/vehicles/view/" + id)).andExpect(status().isOk());
+        mockMvc.perform(post("/vehicles/view/" + id)).andExpect(status().isOk());
+
+        // 3. Busca os mais populares
+        mockMvc.perform(
+                        get("/vehicles/mostPopular")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(org.hamcrest.Matchers.greaterThanOrEqualTo(1)));
+    }
 }

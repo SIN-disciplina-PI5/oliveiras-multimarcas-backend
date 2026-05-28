@@ -127,6 +127,41 @@ public class DatabaseSeeder implements CommandLineRunner {
         client2.setCpf("12345678901");
         clientService.insert(client2);
 
+        ClientRequestDTO client3 = new ClientRequestDTO();
+        client3.setName("Roberval");
+        client3.setEmail("robervl@gmail.com");
+        client3.setContact("081900000004");
+        client3.setCpf("12345678983");
+        clientService.insert(client3);
+
+        ClientRequestDTO client4 = new ClientRequestDTO();
+        client4.setName("Roberval");
+        client4.setEmail("roberval2@gmail.com");
+        client4.setContact("081900000182");
+        client4.setCpf("12345678929");
+        clientService.insert(client4);
+
+        ClientRequestDTO client5 = new ClientRequestDTO();
+        client5.setName("Roberval");
+        client5.setEmail("roberval3@gmail.com");
+        client5.setContact("081900000473");
+        client5.setCpf("12345678283");
+        clientService.insert(client5);
+
+        ClientRequestDTO client6 = new ClientRequestDTO();
+        client6.setName("Roberval");
+        client6.setEmail("roberval4@gmail.com");
+        client6.setContact("081900000827");
+        client6.setCpf("12345678019");
+        clientService.insert(client6);
+
+        ClientRequestDTO client7 = new ClientRequestDTO();
+        client7.setName("Roberval");
+        client7.setEmail("roberval5@gmail.com");
+        client7.setContact("081900000829");
+        client7.setCpf("12345678028");
+        clientService.insert(client7);
+
         SaleRequestDTO sale1 = new SaleRequestDTO();
         sale1.setClient(clientService.findByEmail(client1.getEmail()).getId());
         sale1.setVehicle(vehicleService.findAll().getFirst().getId());
