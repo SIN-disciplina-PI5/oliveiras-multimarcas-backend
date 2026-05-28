@@ -21,13 +21,14 @@ public class Token {
     private UUID id;
     @Column(nullable = false)
     private String token;
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name="employee_id", nullable=true)
+    private Employee employee;
     @Column(nullable = false)
     private LocalDateTime expires = LocalDateTime.now().plusDays(7);
 
-    Token(String token, UUID userId){
+    Token(String token, Employee employee){
         this.token = token;
-        this.userId = userId;
+        this.employee = employee;
     }
 }

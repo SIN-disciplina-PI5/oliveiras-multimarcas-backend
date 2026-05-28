@@ -5,7 +5,7 @@ import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,7 +34,7 @@ public class AppointmentTests {
         dto.setSchedulingDate(LocalDate.of(2025, 12, 25));
         dto.setSchedulingTime(LocalTime.of(14, 30));
         dto.setDescription("Test Drive");
-        dto.setStatus(Status.PENDING);
+        dto.setStatus(AppointmentStatus.PENDING);
 
         // Ação: Instanciar a entidade usando o construtor personalizado
         Appointment appointment = new Appointment(dto, vehicle, client);
@@ -54,7 +54,7 @@ public class AppointmentTests {
         // Teste simples de Getters e Setters para cobertura completa da entidade
         Appointment appointment = new Appointment();
         UUID id = UUID.randomUUID();
-        Status status = Status.SERVICED;
+        AppointmentStatus status = AppointmentStatus.SERVICED;
 
         appointment.setId(id);
         appointment.setStatus(status);

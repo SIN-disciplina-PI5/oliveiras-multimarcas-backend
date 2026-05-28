@@ -8,6 +8,9 @@ import lombok.Setter;
 import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,6 +22,14 @@ public class Employee extends User {
     private String position;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = true)
+    private String profileImage;
+    @OneToMany(
+            mappedBy = "token",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Token> tokens = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

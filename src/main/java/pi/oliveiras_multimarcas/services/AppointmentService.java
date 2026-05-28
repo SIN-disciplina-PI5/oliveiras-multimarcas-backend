@@ -9,7 +9,7 @@ import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 import pi.oliveiras_multimarcas.repositories.AppointmentRepository;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
@@ -45,7 +45,7 @@ public class AppointmentService {
 
         // 3. Define um status padrão (PENDING) se nenhum for enviado
         if (dto.getStatus() == null) {
-            appointment.setStatus(Status.PENDING); //
+            appointment.setStatus(AppointmentStatus.PENDING); //
         }
 
         // 4. Salva a entidade no banco
@@ -70,7 +70,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponseDTO updateStatus(UUID id, Status status) { //
+    public AppointmentResponseDTO updateStatus(UUID id, AppointmentStatus status) { //
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchException("Agendamento")); //
 

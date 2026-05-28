@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
+import pi.oliveiras_multimarcas.dto.EmployeeRequestUpdateDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.repositories.EmployeeRepository;
@@ -90,12 +91,11 @@ class EmployeeServiceTest {
     void testUpdateByIdSuccess() {
         UUID id = UUID.randomUUID();
 
-        EmployeeRequestDTO dto = new EmployeeRequestDTO();
+        EmployeeRequestUpdateDTO dto = new EmployeeRequestUpdateDTO();
         dto.setName("Maria");
         dto.setEmail("maria@test.com");
-        dto.setPassword("12345");
         dto.setContact("88888-8888");
-        dto.setPosition("Manager");
+        dto.setProfileImage("http://teste");
 
         when(employeeRepository.findById(id)).thenReturn(Optional.of(new Employee()));
         when(passwordEncoder.encode("12345")).thenReturn("encodedPwd");
@@ -113,7 +113,7 @@ class EmployeeServiceTest {
         when(employeeRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThrows(NoSuchException.class, () -> {
-            employeeService.updateById(UUID.randomUUID(), new EmployeeRequestDTO());
+            employeeService.updateById(UUID.randomUUID(), new EmployeeRequestUpdateDTO());
         });
     }
 

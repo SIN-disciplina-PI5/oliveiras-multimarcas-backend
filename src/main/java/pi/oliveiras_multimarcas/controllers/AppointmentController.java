@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
 import pi.oliveiras_multimarcas.dto.AppointmentResponseDTO;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 import pi.oliveiras_multimarcas.services.AppointmentService;
 
 import java.net.URI;
@@ -42,7 +42,7 @@ public class AppointmentController {
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateStatus(
             @PathVariable UUID id,
-            @RequestParam Status status) { //
+            @RequestParam AppointmentStatus status) { //
         AppointmentResponseDTO updatedAppointment = appointmentService.updateStatus(id, status);
         return ResponseEntity.ok(updatedAppointment);
     }
