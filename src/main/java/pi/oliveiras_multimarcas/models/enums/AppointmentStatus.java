@@ -1,6 +1,6 @@
 package pi.oliveiras_multimarcas.models.enums;
 
-public enum Status {
+public enum AppointmentStatus {
     PENDING,
     SERVICED,
     EXPIRED

@@ -21,6 +21,8 @@ public class EmployeeResponseDTO {
     private String position; 
     private UserRole role;
     private String cpf;
+    private String profileImage;
+    private String contact;
 
     public EmployeeResponseDTO(Employee employee) {
         id = employee.getId();
@@ -29,5 +31,7 @@ public class EmployeeResponseDTO {
         position = employee.getPosition();
         role = employee.getRole();
         cpf = employee.getCpf();
+        profileImage = employee.getProfileImage();
+        contact = employee.getContact();
     }
 }
