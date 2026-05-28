@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.models.Client;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -18,6 +19,7 @@ public class ClientResponseDTO {
     private String email;
     private String contact;
     private String cpf;
+    private LocalDateTime createdAt;
 
     public ClientResponseDTO(Client client) {
         id = client.getId();
@@ -25,5 +27,6 @@ public class ClientResponseDTO {
         email = client.getEmail();
         contact = client.getContact();
         cpf = client.getCpf();
+        createdAt = client.getCreatedAt();
     }
 }
