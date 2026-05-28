@@ -4,7 +4,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,5 +28,5 @@ public class AppointmentRequestDTO {
     private LocalTime schedulingTime;
 
     private String description;
-    private Status status;
+    private AppointmentStatus status;
 }

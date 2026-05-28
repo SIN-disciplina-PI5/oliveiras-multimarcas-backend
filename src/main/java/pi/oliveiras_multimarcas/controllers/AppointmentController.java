@@ -62,4 +62,4 @@ public class AppointmentController {
         appointmentService.deleteById(id);
         return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
-}
+}

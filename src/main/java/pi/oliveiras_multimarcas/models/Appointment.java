@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -46,7 +46,7 @@ public class Appointment extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private AppointmentStatus status;
 
     // Construtor via DTO
     public Appointment(AppointmentRequestDTO dto, Vehicle vehicle, Client client) {

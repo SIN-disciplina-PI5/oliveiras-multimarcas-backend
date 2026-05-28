@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pi.oliveiras_multimarcas.dto.*;
-import pi.oliveiras_multimarcas.models.enums.Status;
+import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.*;
 
@@ -178,7 +178,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         appointment1.setClientId(clientService.findByEmail(client1.getEmail()).getId());
         appointment1.setVehicleId(vehicleService.findAll().get(2).getId());
-        appointment1.setStatus(Status.PENDING);
+        appointment1.setStatus(AppointmentStatus.PENDING);
         appointment1.setDescription("descrição aqui");
         appointment1.setSchedulingTime(LocalTime.of(9, 0,0));
         appointment1.setSchedulingDate(LocalDate.of(2026,5, 12));
@@ -189,7 +189,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         appointment2.setClientId(clientService.findByEmail(client2.getEmail()).getId());
         appointment2.setVehicleId(vehicleService.findAll().get(2).getId());
-        appointment2.setStatus(Status.PENDING);
+        appointment2.setStatus(AppointmentStatus.PENDING);
         appointment2.setDescription("descrição aqui");
         appointment2.setSchedulingTime(LocalTime.of(9, 0,0));
         appointment2.setSchedulingDate(LocalDate.of(2026,5, 13));

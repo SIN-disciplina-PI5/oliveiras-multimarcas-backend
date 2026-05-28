@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
+import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.models.Token;
+import pi.oliveiras_multimarcas.models.User;
 import pi.oliveiras_multimarcas.repositories.TokenRepositorie;
 
 import java.util.Optional;
@@ -12,9 +14,10 @@ import java.util.UUID;
 
 @Service
 public class TokenService {
-
     @Autowired
-    TokenRepositorie tokenRepositorie;
+    private EmployeeService employeeService;
+    @Autowired
+    private TokenRepositorie tokenRepositorie;
 
     @Transactional(readOnly = true)
     public boolean isTokenActive(String token){
@@ -23,10 +26,11 @@ public class TokenService {
     }
 
     @Transactional
-    public Token insert(String token, UUID userId){
+    public Token insert(String token, UUID employeeId){
         Token newToken = new Token();
+        Employee employee = employeeService.findById(employeeId);
         newToken.setToken(token);
-        newToken.setUserId(userId);
+        newToken.setEmployee(employee);
         newToken = tokenRepositorie.save(newToken);
 
         return newToken;
