@@ -16,7 +16,7 @@ public class ImageController {
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadImage(
             @RequestParam("file") MultipartFile file
     ) {
