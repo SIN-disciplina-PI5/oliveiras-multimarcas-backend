@@ -26,7 +26,12 @@ public class SeedAdmin implements CommandLineRunner {
         employee1.setCpf("12345678901");
         employee1.setRole(UserRole.ADMIN);
 
-        employeeService.insert(employee1);
+        try{
+            employeeService.insert(employee1);
+        } catch (RuntimeException e){
+            System.out.println("Error: "+ e.getMessage());
+        }
+
     }
 
 }
