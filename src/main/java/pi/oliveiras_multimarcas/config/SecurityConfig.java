@@ -21,7 +21,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Value("${cors.origins}")
-    private List<String> origins;
+    private String origins;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -67,7 +67,7 @@ public class SecurityConfig {
 
         config
                 .setAllowedOrigins(
-                        origins
+                        List.of(origins.split(","))
                 );
 
         config.setAllowedMethods(List.of(
