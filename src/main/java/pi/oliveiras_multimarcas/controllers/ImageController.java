@@ -16,12 +16,24 @@ public class ImageController {
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadImage(
+    @PostMapping(value = "/cars", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadCarImage(
             @RequestParam("file") MultipartFile file
     ) {
         try {
-            String imageUrl = s3Service.uploadImage(file);
+            String imageUrl = s3Service.uploadImage(file, "cars");
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping(value = "/profiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadProfileImage(
+            @RequestParam("file") MultipartFile file
+    ) {
+        try {
+            String imageUrl = s3Service.uploadImage(file, "profiles");
             return ResponseEntity.ok(imageUrl);
         } catch (IOException e) {
             throw new RuntimeException(e);
