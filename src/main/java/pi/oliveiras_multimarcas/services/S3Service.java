@@ -24,7 +24,7 @@ public class S3Service {
     @Value("${aws.region}")
     private String region;
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file, String dir) throws IOException {
 
         // valida se é imagem
         if (!Objects.requireNonNull(file.getContentType())
@@ -44,7 +44,7 @@ public class S3Service {
         String fileName = UUID.randomUUID() + extension;
 
         // caminho no bucket
-        String key = "cars/" + fileName;
+        String key = dir + "/" + fileName;
 
         // request upload
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
