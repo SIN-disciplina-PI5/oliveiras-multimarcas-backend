@@ -14,6 +14,7 @@ import java.util.Map;
 public class DashboardResponseDTO {
     private DashboardSalesDTO sales;
     private DashboardVisitsDTO visits;
+    private DashboardProposalsDTO proposals;
     private Map<String, Long> carsByBrand;
     private long totalCustomers;
 }
