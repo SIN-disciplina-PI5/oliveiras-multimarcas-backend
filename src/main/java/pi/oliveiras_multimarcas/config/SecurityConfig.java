@@ -21,7 +21,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Value("${cors.origins}")
-    private List<String> origins;
+    private String origins;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .frameOptions(frame -> frame.sameOrigin())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error").permitAll()
                         .requestMatchers( HttpMethod.POST,"/auth/signin", "/auth/signup").permitAll()
                         .requestMatchers( HttpMethod.POST, "/clients").permitAll()
@@ -67,18 +67,14 @@ public class SecurityConfig {
 
         config
                 .setAllowedOrigins(
-                        origins
+                        List.of(origins.split(","))
                 );
 
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
 
-        config.setAllowedHeaders(List.of(
-                "Authorization", "Content-Type", "Accept", "Origin",
-                "X-Requested-With", "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"
-        ));
+        config.setAllowedHeaders(List.of("*"));
 
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
