@@ -56,7 +56,7 @@ public class AuthControllers {
         }
         Boolean success = (Boolean) response.get("success");
 
-        if (!Boolean.TRUE.equals(success)) {
+        if (Boolean.TRUE.equals(success)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -64,7 +64,7 @@ public class AuthControllers {
                 ? ((Number) response.get("score")).doubleValue()
                 : 0.0;
 
-        if (score < 0.6) {
+        if (score < 0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
