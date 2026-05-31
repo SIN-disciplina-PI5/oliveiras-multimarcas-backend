@@ -14,11 +14,11 @@ public interface VehicleViewRepository extends JpaRepository<VehicleView, Long> 
     public Optional<List<VehicleView>> findByVehicleId(UUID id);
 
     @Query(value = """
-    SELECT vehicle_id, COUNT(*) as total
+    SELECT vehicle_id::text
     FROM vehicle_view
     GROUP BY vehicle_id
-    ORDER BY total DESC
+    ORDER BY COUNT(*) DESC
     LIMIT 5
 """, nativeQuery = true)
-    List<Object[]> findTop5Vehicles();
+    List<String> findTop5Vehicles();
 }
