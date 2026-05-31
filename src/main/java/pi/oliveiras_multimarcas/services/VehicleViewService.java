@@ -29,13 +29,11 @@ public class VehicleViewService {
 
     @Transactional(readOnly = true)
     public List<Vehicle> findTop5Vehicles(){
-        List<Object[]> vehicleViews = vehicleViewRepository.findTop5Vehicles();
+        List<String> ids = vehicleViewRepository.findTop5Vehicles();
+
         List<Vehicle> vehicles = new ArrayList<Vehicle>();
-        for (Object[] obj: vehicleViews){
-            byte[] bytes = (byte[]) obj[0];
-            UUID id = bytesToUUID(bytes);
-            Vehicle vehicle = vehicleService.findyById(id);
-            vehicles.add(vehicle);
+        for (String id : ids) {
+            vehicles.add(vehicleService.findyById(UUID.fromString(id)));
         }
         return vehicles;
     }
