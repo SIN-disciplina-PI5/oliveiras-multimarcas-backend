@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/upload")
-public class ImageController {
+public class S3Controller {
 
     @Autowired
     private S3Service s3Service;
@@ -35,6 +35,18 @@ public class ImageController {
         try {
             String imageUrl = s3Service.uploadImage(file, "profiles");
             return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping(value = "/contract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadContract(
+            @RequestParam("file") MultipartFile file
+    ) {
+        try {
+            String contractUrl = s3Service.uploadPdf(file, "contract");
+            return ResponseEntity.ok(contractUrl);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
