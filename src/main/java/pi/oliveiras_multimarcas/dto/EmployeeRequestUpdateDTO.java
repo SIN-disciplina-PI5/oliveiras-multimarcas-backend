@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.Date;
 
 @Getter
 @AllArgsConstructor
@@ -20,4 +21,8 @@ public class EmployeeRequestUpdateDTO {
     private String contact;
     private String profileImage;
     private String position;
+    private String rg;
+    private String address;
+    private String cityState;
+    private Date birthDate;
 }
