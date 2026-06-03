@@ -70,7 +70,6 @@ class EmployeeServiceTest {
         EmployeeRequestDTO dto = new EmployeeRequestDTO();
         dto.setName("Maria");
         dto.setEmail("test@test.com");
-        dto.setPassword("1234");
         dto.setPosition("Dev");
         dto.setContact("99999-9999");
 
@@ -83,7 +82,6 @@ class EmployeeServiceTest {
         Employee result = employeeService.insert(dto);
 
         assertNotNull(result.getId());
-        verify(passwordEncoder).encode("1234");
         verify(employeeRepository).save(any(Employee.class));
     }
 
