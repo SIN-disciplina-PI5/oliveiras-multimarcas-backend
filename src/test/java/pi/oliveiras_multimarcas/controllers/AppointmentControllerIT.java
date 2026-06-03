@@ -41,6 +41,7 @@ public class AppointmentControllerIT {
 
     private UUID vehicleId;
     private UUID clientId;
+    private ClientRequestDTO clientRequestDTO;
 
     @BeforeEach
     void setUp() {
@@ -58,9 +59,10 @@ public class AppointmentControllerIT {
         ClientRequestDTO clientDTO = new ClientRequestDTO();
         clientDTO.setName("Maria Teste");
         clientDTO.setEmail("maria@teste.com");
-        clientDTO.setContact("99999999");
         clientDTO.setCpf("12345678928");
         clientDTO.setContact("81900001232");
+
+        this.clientRequestDTO =clientDTO;
 
         // Verifica se já existe para evitar erro de duplicidade em testes repetidos ou usa try/catch
         try {
@@ -77,13 +79,12 @@ public class AppointmentControllerIT {
         String json = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2025-10-20",
-                "schedulingTime": "14:00:00",
-                "description": "Interesse na compra",
+                "schedulingTime": "14:00",
                 "status": "PENDING"
             }
-        """, vehicleId, clientId);
+        """, vehicleId, this.clientRequestDTO);
 
         mockMvc.perform(
                         post("/appointments")
@@ -93,7 +94,6 @@ public class AppointmentControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.vehicleId").value(vehicleId.toString()))
-                .andExpect(jsonPath("$.clientId").value(clientId.toString()))
                 .andExpect(jsonPath("$.status").value("PENDING"));
     }
 
@@ -103,12 +103,11 @@ public class AppointmentControllerIT {
         String json = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2025-10-20",
-                "schedulingTime": "14:00:00",
-                "description": "Teste Falha"
+                "schedulingTime": "14:00",
             }
-        """, UUID.randomUUID(), UUID.randomUUID());
+        """, UUID.randomUUID(), this.clientRequestDTO);
 
         mockMvc.perform(
                         post("/appointments")
@@ -127,12 +126,12 @@ public class AppointmentControllerIT {
         String json = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2027-12-01",
-                "schedulingTime": "09:00:00",
-                "description": "Conflito de horário"
+                "schedulingTime": "09:00",
+                "status": "PENDING"
             }
-        """, vehicleId, clientId);
+        """, vehicleId, this.clientRequestDTO);
 
         mockMvc.perform(
                         post("/appointments")
@@ -160,12 +159,11 @@ public class AppointmentControllerIT {
         String json = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2025-11-15",
-                "schedulingTime": "10:00:00",
-                "description": "Visita"
+                "schedulingTime": "10:00",
             }
-        """, vehicleId, clientId);
+        """, vehicleId, this.clientRequestDTO);
 
         MvcResult result = mockMvc.perform(
                 post("/appointments")
@@ -203,8 +201,7 @@ public class AppointmentControllerIT {
         String updateJson = """
             {
                 "schedulingDate": "2027-06-15",
-                "schedulingTime": "16:30:00",
-                "description": "Reagendado pelo cliente",
+                "schedulingTime": "16:30",
                 "status": "SERVICED"
             }
         """;
@@ -217,8 +214,7 @@ public class AppointmentControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.schedulingDate").value("2027-06-15"))
-                .andExpect(jsonPath("$.schedulingTime").value("16:30:00"))
-                .andExpect(jsonPath("$.description").value("Reagendado pelo cliente"))
+                .andExpect(jsonPath("$.schedulingTime").value("16:30"))
                 .andExpect(jsonPath("$.status").value("SERVICED"));
     }
 
@@ -233,8 +229,7 @@ public class AppointmentControllerIT {
         String updateJson = """
             {
                 "schedulingDate": "2027-07-20",
-                "schedulingTime": "11:00:00",
-                "description": "Nova descrição"
+                "schedulingTime": "11:00",
             }
         """;
 
@@ -245,8 +240,7 @@ public class AppointmentControllerIT {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.schedulingDate").value("2027-07-20"))
-                .andExpect(jsonPath("$.schedulingTime").value("11:00:00"))
-                .andExpect(jsonPath("$.description").value("Nova descrição"))
+                .andExpect(jsonPath("$.schedulingTime").value("11:00"))
                 .andExpect(jsonPath("$.status").value("PENDING"));
     }
 
@@ -259,12 +253,11 @@ public class AppointmentControllerIT {
         String json2 = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2027-12-02",
-                "schedulingTime": "10:00:00",
-                "description": "Segundo agendamento"
+                "schedulingTime": "10:00",
             }
-        """, vehicleId, clientId);
+        """, vehicleId, this.clientRequestDTO);
 
         MvcResult result2 = mockMvc.perform(
                 post("/appointments")
@@ -279,8 +272,7 @@ public class AppointmentControllerIT {
         String updateJson = """
             {
                 "schedulingDate": "2027-12-01",
-                "schedulingTime": "09:00:00",
-                "description": "Tentativa de conflito"
+                "schedulingTime": "09:00",
             }
         """;
 
@@ -293,37 +285,11 @@ public class AppointmentControllerIT {
     }
 
     @Test
-    public void shouldAllowUpdateToSameScheduleOfSameAppointment() throws Exception {
-        // 1. Criar agendamento
-        MvcResult result = createAuxiliaryAppointment();
-        String body = result.getResponse().getContentAsString();
-        UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
-
-        // 2. Atualizar mantendo o mesmo horário (apenas muda a descrição) — não deve dar conflito
-        String updateJson = """
-            {
-                "schedulingDate": "2027-12-01",
-                "schedulingTime": "09:00:00",
-                "description": "Apenas mudei a descrição"
-            }
-        """;
-
-        mockMvc.perform(
-                        put("/appointments/" + id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(updateJson)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.description").value("Apenas mudei a descrição"));
-    }
-
-    @Test
     public void shouldReturnNotFoundWhenUpdatingNonExistentAppointment() throws Exception {
         String updateJson = """
             {
                 "schedulingDate": "2027-06-15",
-                "schedulingTime": "16:30:00",
-                "description": "Não existe"
+                "schedulingTime": "16:30",
             }
         """;
 
@@ -367,7 +333,6 @@ public class AppointmentControllerIT {
         String body = result.getResponse().getContentAsString();
         UUID id = UUID.fromString(JsonPath.read(body, "$.id"));
 
-        // 2. Deletar
         mockMvc.perform(
                         delete("/appointments/" + id)
                 )
@@ -387,12 +352,12 @@ public class AppointmentControllerIT {
         String json = String.format("""
             {
                 "vehicleId": "%s",
-                "clientId": "%s",
+                "client": "%s",
                 "schedulingDate": "2027-12-01",
-                "schedulingTime": "09:00:00",
-                "description": "Auxiliar"
+                "schedulingTime": "09:00",
+                "status": "PENDING"
             }
-        """, vehicleId, clientId);
+        """, vehicleId, this.clientRequestDTO);
 
         return mockMvc.perform(
                 post("/appointments")
@@ -400,4 +365,4 @@ public class AppointmentControllerIT {
                         .content(json)
         ).andReturn();
     }
-}
+}

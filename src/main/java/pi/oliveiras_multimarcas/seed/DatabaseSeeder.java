@@ -176,10 +176,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         AppointmentRequestDTO appointment1 = new AppointmentRequestDTO();
 
-        appointment1.setClientId(clientService.findByEmail(client1.getEmail()).getId());
+        appointment1.setClient(client1);
         appointment1.setVehicleId(vehicleService.findAll().get(2).getId());
         appointment1.setStatus(AppointmentStatus.PENDING);
-        appointment1.setDescription("descrição aqui");
         appointment1.setSchedulingTime(LocalTime.of(9, 0,0));
         appointment1.setSchedulingDate(LocalDate.of(2026,5, 12));
 
@@ -187,10 +186,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         AppointmentRequestDTO appointment2 = new AppointmentRequestDTO();
 
-        appointment2.setClientId(clientService.findByEmail(client2.getEmail()).getId());
+        appointment2.setClient(client2);
         appointment2.setVehicleId(vehicleService.findAll().get(2).getId());
         appointment2.setStatus(AppointmentStatus.PENDING);
-        appointment2.setDescription("descrição aqui");
         appointment2.setSchedulingTime(LocalTime.of(9, 0,0));
         appointment2.setSchedulingDate(LocalDate.of(2026,5, 13));
 

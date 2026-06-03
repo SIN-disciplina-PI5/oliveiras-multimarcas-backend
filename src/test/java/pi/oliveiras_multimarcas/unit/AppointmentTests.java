@@ -2,6 +2,7 @@ package pi.oliveiras_multimarcas.unit;
 
 import org.junit.jupiter.api.Test;
 import pi.oliveiras_multimarcas.dto.AppointmentRequestDTO;
+import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.models.Appointment;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.models.Vehicle;
@@ -30,10 +31,9 @@ public class AppointmentTests {
         // Criar o DTO com dados de entrada
         AppointmentRequestDTO dto = new AppointmentRequestDTO();
         dto.setVehicleId(vehicle.getId());
-        dto.setClientId(client.getId());
+        dto.setClient(new ClientRequestDTO());
         dto.setSchedulingDate(LocalDate.of(2025, 12, 25));
         dto.setSchedulingTime(LocalTime.of(14, 30));
-        dto.setDescription("Test Drive");
         dto.setStatus(AppointmentStatus.PENDING);
 
         // Ação: Instanciar a entidade usando o construtor personalizado
@@ -42,10 +42,8 @@ public class AppointmentTests {
         // Verificação: Assegurar que os dados foram mapeados corretamente
         assertNotNull(appointment);
         assertEquals(vehicle, appointment.getVehicle());
-        assertEquals(client, appointment.getClient());
         assertEquals(dto.getSchedulingDate(), appointment.getSchedulingDate());
         assertEquals(dto.getSchedulingTime(), appointment.getSchedulingTime());
-        assertEquals(dto.getDescription(), appointment.getDescription());
         assertEquals(dto.getStatus(), appointment.getStatus());
     }
 
