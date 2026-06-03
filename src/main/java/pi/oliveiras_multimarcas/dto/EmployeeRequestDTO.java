@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
+import java.util.Date;
 
 @Data
 public class EmployeeRequestDTO {
@@ -21,4 +22,9 @@ public class EmployeeRequestDTO {
     private String position;
     private UserRole role;
     private String profileImage;
+
+    private String rg;
+    private String address;
+    private String cityState;
+    private Date birthDate;
 }

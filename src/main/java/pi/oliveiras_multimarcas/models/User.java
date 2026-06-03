@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
+import java.util.Date;
 
 import java.util.UUID;
 
@@ -40,18 +41,39 @@ public abstract class User extends BaseEntity{
     @Column(unique = true, nullable = false)
     private String cpf;
 
-    public User(String name, String email, String contact, String cpf){
+    // === NOVOS CAMPOS PARA O CONTRATO ===
+    @Column(nullable = true)
+    private String rg;
+
+    @Column(nullable = true)
+    private String address;
+
+    @Column(nullable = true)
+    private String cityState;
+
+    @Column(nullable = true)
+    private Date birthDate;
+
+    public User(String name, String email, String contact, String cpf, String rg, String address, String cityState, Date birthDate){
         this.name = name;
         this.email = email;
         this.contact = contact;
         this.cpf = cpf;
+        this.rg = rg;
+        this.address = address;
+        this.cityState = cityState;
+        this.birthDate = birthDate;
     }
 
     public User (ClientRequestDTO dto){
-        name = dto.getName();
-        email = dto.getEmail();
-        contact = dto.getContact();
-        cpf = dto.getCpf();
+        this.name = dto.getName();
+        this.email = dto.getEmail();
+        this.contact = dto.getContact();
+        this.cpf = dto.getCpf();
+        // Mapeamento dos novos campos
+        this.rg = dto.getRg();
+        this.address = dto.getAddress();
+        this.cityState = dto.getCityState();
+        this.birthDate = dto.getBirthDate();
     }
-
 }

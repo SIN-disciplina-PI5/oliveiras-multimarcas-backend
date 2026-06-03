@@ -36,7 +36,8 @@ public class Employee extends User {
     private UserRole role;
 
     public Employee(EmployeeRequestDTO dto){
-        super(dto.getName(), dto.getEmail(), dto.getContact(), dto.getCpf());
+        super(dto.getName(), dto.getEmail(), dto.getContact(), dto.getCpf(), dto.getRg(),dto.getAddress(),
+                dto.getCityState(),dto.getBirthDate());
         position = dto.getPosition();
         role = UserRole.ADMIN;
     }

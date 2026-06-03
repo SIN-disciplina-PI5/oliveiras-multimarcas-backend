@@ -8,7 +8,6 @@ import pi.oliveiras_multimarcas.dto.ClientRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
 import pi.oliveiras_multimarcas.models.Client;
 import pi.oliveiras_multimarcas.repositories.ClientRepository;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -56,6 +55,10 @@ public class ClientService {
         client.setEmail(dto.getEmail());
         client.setContact(dto.getContact());
         client.setCpf(dto.getCpf());
+        client.setRg(dto.getRg());
+        client.setAddress(dto.getAddress());
+        client.setCityState(dto.getCityState());
+        client.setBirthDate(dto.getBirthDate());
 
         return clientRepository.save(client);
     }
@@ -82,6 +85,10 @@ public class ClientService {
         client.setEmail(dto.getEmail());
         client.setContact(dto.getContact());
         client.setCpf(dto.getCpf());
+        client.setRg(dto.getRg());
+        client.setAddress(dto.getAddress());
+        client.setCityState(dto.getCityState());
+        client.setBirthDate(dto.getBirthDate());
         return client;
     }
 }

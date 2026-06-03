@@ -3,6 +3,7 @@ package pi.oliveiras_multimarcas.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import java.util.Date;
 
 @Data
 public class ClientRequestDTO {
@@ -19,4 +20,8 @@ public class ClientRequestDTO {
 
     @NotBlank(message = "O cpf não pode estar em branco")
     private String cpf;
+    private String rg;
+    private String address;
+    private String cityState;
+    private Date birthDate;
 }
