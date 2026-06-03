@@ -24,7 +24,6 @@ public class SeedAdmin implements CommandLineRunner {
         if (employeeRepository.existsByEmail("admin@admin.com")){
             EmployeeRequestDTO employee1 = new EmployeeRequestDTO();
             employee1.setEmail("admin@admin.com");
-            employee1.setPassword("admin");
             employee1.setName("Ewayrton");
             employee1.setPosition("Product Owner");
             employee1.setContact("081900000001");

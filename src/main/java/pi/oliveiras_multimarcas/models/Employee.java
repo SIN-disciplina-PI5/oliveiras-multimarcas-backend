@@ -25,7 +25,7 @@ public class Employee extends User {
     @Column(nullable = true)
     private String profileImage;
     @OneToMany(
-            mappedBy = "token",
+            mappedBy = "employee",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -38,7 +38,6 @@ public class Employee extends User {
     public Employee(EmployeeRequestDTO dto){
         super(dto.getName(), dto.getEmail(), dto.getContact(), dto.getCpf());
         position = dto.getPosition();
-        password = dto.getPassword();
         role = UserRole.ADMIN;
     }
 

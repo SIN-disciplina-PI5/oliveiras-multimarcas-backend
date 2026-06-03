@@ -21,7 +21,7 @@ public class VehicleView extends BaseEntity{
     @Column
     private Date dateTime = new Date();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = { CascadeType.ALL})
     @JoinColumn(name="vehicle_id", nullable = false)
     private Vehicle vehicle;
 

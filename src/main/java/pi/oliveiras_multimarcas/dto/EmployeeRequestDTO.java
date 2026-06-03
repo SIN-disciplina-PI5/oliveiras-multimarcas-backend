@@ -15,10 +15,6 @@ public class EmployeeRequestDTO {
     @Email(message = "Formato de email inválido")
     private String email;
 
-    @NotBlank(message = "A senha não pode estar em branco")
-    @Size(min = 5, max = 20, message = "A senha deve ter entre 5 e 20 caracteres")
-    private String password;
-
     private String cpf;
 
     private String contact;

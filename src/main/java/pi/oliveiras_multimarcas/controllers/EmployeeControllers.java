@@ -1,9 +1,11 @@
 package pi.oliveiras_multimarcas.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pi.oliveiras_multimarcas.dto.ChangePasswordRequestDto;
 import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.dto.EmployeeRequestUpdateDTO;
 import pi.oliveiras_multimarcas.dto.EmployeeResponseDTO;
@@ -36,6 +38,7 @@ public class EmployeeControllers {
 
     @GetMapping("/me")
     public ResponseEntity<EmployeeResponseDTO> findMe(@AuthenticationPrincipal String email) {
+        if (email ==null) ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         Employee employee = employeeService.findByEmail(email);
         EmployeeResponseDTO employeeResponse = new EmployeeResponseDTO(employee);
         return ResponseEntity.ok().body(employeeResponse);
@@ -43,12 +46,15 @@ public class EmployeeControllers {
 
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> insert(@RequestBody EmployeeRequestDTO EmployeeRequestDTO) {
-        if (EmployeeRequestDTO.getName() == null || EmployeeRequestDTO.getEmail() == null || EmployeeRequestDTO.getPassword() == null) {
-            return ResponseEntity.badRequest().build();
-        }
         Employee employee = employeeService.insert(EmployeeRequestDTO);
         EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO(employee);
         return ResponseEntity.status(201).body(employeeResponseDTO);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> changePassword(@RequestParam UUID id, @RequestBody ChangePasswordRequestDto dto){
+        employeeService.changePassword(id, dto.getPassword());
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
