@@ -1,6 +1,7 @@
 package pi.oliveiras_multimarcas.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,8 @@ public class EmployeeService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("password.default")
+    private String passwordDefault;
 
     @Transactional(readOnly = true)
     public List<Employee> findAll(){
@@ -38,7 +41,7 @@ public class EmployeeService {
     @Transactional
     public Employee insert(EmployeeRequestDTO dto) {
         Employee employee = toEntity(dto);
-        employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        employee.setPassword(passwordEncoder.encode(passwordDefault));
         employee = employeeRepository.save(employee);
         return employee;
     }
@@ -55,6 +58,14 @@ public class EmployeeService {
         employee.setPosition(dto.getPosition());
         employee = employeeRepository.save(employee);
         return employee;
+    }
+
+    @Transactional
+    public void changePassword(UUID id,String password){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchException("Usuário"));
+        employee.setPassword(passwordEncoder.encode(password));
+        employeeRepository.save(employee);
     }
 
 
@@ -75,7 +86,6 @@ public class EmployeeService {
         Employee user = new Employee();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
         user.setRole(dto.getRole());
         user.setPosition(dto.getPosition());
         user.setContact(dto.getContact());

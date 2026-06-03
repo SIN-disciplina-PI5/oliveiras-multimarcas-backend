@@ -67,4 +67,48 @@ public class S3Service {
                 key
         );
     }
+
+    public String uploadPdf(MultipartFile file, String dir) throws IOException {
+
+        // valida se é imagem
+        if (!Objects.requireNonNull(file.getContentType())
+                .equals("application/pdf")) {
+
+            throw new RuntimeException("Arquivo inválido");
+        }
+
+        // pega extensão
+        String originalName = file.getOriginalFilename();
+
+        String extension = originalName.substring(
+                originalName.lastIndexOf(".")
+        );
+
+        // gera nome único
+        String fileName = UUID.randomUUID() + extension;
+
+        // caminho no bucket
+        String key = dir + "/" + fileName;
+
+        // request upload
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType(file.getContentType())
+                .build();
+
+        // upload
+        s3Client.putObject(
+                putObjectRequest,
+                RequestBody.fromBytes(file.getBytes())
+        );
+
+        // retorna URL pública
+        return String.format(
+                "https://%s.s3.%s.amazonaws.com/%s",
+                bucketName,
+                region,
+                key
+        );
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pi.oliveiras_multimarcas.dto.*;
+import pi.oliveiras_multimarcas.models.Employee;
 import pi.oliveiras_multimarcas.models.enums.AppointmentStatus;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 import pi.oliveiras_multimarcas.services.*;
@@ -93,25 +94,25 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         EmployeeRequestDTO employee1 = new EmployeeRequestDTO();
         employee1.setEmail("teste1@gmail.com");
-        employee1.setPassword("Senha1234");
         employee1.setName("epamilondas");
         employee1.setPosition("vendedor");
         employee1.setContact("081900000000");
         employee1.setCpf("12345678902");
         employee1.setRole(UserRole.ADMIN);
 
-        employeeService.insert(employee1);
+        Employee emp1 = employeeService.insert(employee1);
+        employeeService.changePassword(emp1.getId(), "Senha1234");
 
         EmployeeRequestDTO employee2 = new EmployeeRequestDTO();
         employee2.setEmail("teste2@gmail.com");
-        employee2.setPassword("S3nh4123");
         employee2.setName("Josefa");
         employee2.setPosition("vendedor");
         employee2.setContact("081900000001");
         employee2.setCpf("12345678903");
         employee2.setRole(UserRole.ADMIN);
 
-        employeeService.insert(employee2);
+        Employee emp2 = employeeService.insert(employee2);
+        employeeService.changePassword(emp2.getId(), "Senha1234");
 
         ClientRequestDTO client1 = new ClientRequestDTO();
         client1.setName("Paulinha");
