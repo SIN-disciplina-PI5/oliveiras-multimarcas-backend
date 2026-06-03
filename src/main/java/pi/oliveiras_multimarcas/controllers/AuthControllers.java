@@ -72,7 +72,6 @@ public class AuthControllers {
         if (employee == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

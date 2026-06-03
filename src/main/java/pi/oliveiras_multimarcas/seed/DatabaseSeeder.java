@@ -109,7 +109,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         employee2.setPosition("vendedor");
         employee2.setContact("081900000001");
         employee2.setCpf("12345678903");
-        employee2.setRole(UserRole.ADMIN);
+        employee2.setRole(UserRole.EMPLOYEE);
 
         Employee emp2 = employeeService.insert(employee2);
         employeeService.changePassword(emp2.getId(), "Senha1234");

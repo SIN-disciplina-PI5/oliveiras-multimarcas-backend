@@ -22,7 +22,7 @@ public class EmployeeService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Value("password.default")
+    @Value("${password.default}")
     private String passwordDefault;
 
     @Transactional(readOnly = true)
