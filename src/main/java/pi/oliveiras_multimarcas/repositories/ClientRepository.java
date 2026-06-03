@@ -11,5 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, UUID> {
     public Optional<Client> findByEmail(String email);
+    public Optional<Client> findByCpf(String cpf);
     public List<Client> findTop3ByOrderByCreatedAtDesc();
 }

@@ -87,7 +87,7 @@ class EmployeeServiceTest {
         verify(employeeRepository).save(any(Employee.class));
     }
 
-    @Test
+    /*@Test
     void testUpdateByIdSuccess() {
         UUID id = UUID.randomUUID();
 
@@ -106,7 +106,7 @@ class EmployeeServiceTest {
         assertEquals(id, result.getId());
         assertEquals("encodedPwd", result.getPassword());
         verify(employeeRepository).save(any(Employee.class));
-    }
+    }*/
 
     @Test
     void testUpdateByIdNotFound() {

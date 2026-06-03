@@ -19,4 +19,5 @@ public class EmployeeRequestUpdateDTO {
     private String email;
     private String contact;
     private String profileImage;
+    private String position;
 }

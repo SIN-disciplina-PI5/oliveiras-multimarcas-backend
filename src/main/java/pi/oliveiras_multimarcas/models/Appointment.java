@@ -41,9 +41,6 @@ public class Appointment extends BaseEntity{
     @Column(name = "scheduling_time", nullable = false)
     private LocalTime schedulingTime;
 
-    @Column(length = 255)
-    private String description;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;
@@ -54,7 +51,6 @@ public class Appointment extends BaseEntity{
         this.client = client;
         this.schedulingDate = dto.getSchedulingDate();
         this.schedulingTime = dto.getSchedulingTime();
-        this.description = dto.getDescription();
         this.status = dto.getStatus();
     }
 }

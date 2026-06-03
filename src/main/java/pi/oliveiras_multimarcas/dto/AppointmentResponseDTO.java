@@ -21,7 +21,6 @@ public class AppointmentResponseDTO {
     private String clientName; // Denormalizado para conveniência
     private LocalDate schedulingDate;
     private LocalTime schedulingTime;
-    private String description;
     private AppointmentStatus status;
 
     public AppointmentResponseDTO(Appointment appointment) {
@@ -32,7 +31,6 @@ public class AppointmentResponseDTO {
         this.clientName = appointment.getClient().getName();
         this.schedulingDate = appointment.getSchedulingDate();
         this.schedulingTime = appointment.getSchedulingTime();
-        this.description = appointment.getDescription();
         this.status = appointment.getStatus();
     }
 }

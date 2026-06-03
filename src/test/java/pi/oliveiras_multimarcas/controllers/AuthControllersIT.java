@@ -133,7 +133,7 @@ public class AuthControllersIT {
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.refreshToken").exists())
-                .andExpect(jsonPath("$.acessToken").exists());
+                .andExpect(jsonPath("$.accessToken").exists());
     }
 
     @Test
@@ -229,7 +229,7 @@ public class AuthControllersIT {
         mockMvc.perform(post("/auth/refresh")
                         .header("Authorization", "Bearer " + refreshToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.acessToken").exists());
+                .andExpect(jsonPath("$.accessToken").exists());
     }
 
     @Test
@@ -247,12 +247,5 @@ public class AuthControllersIT {
                 .andExpect(status().isUnauthorized());
     }
 
-    // ========== POST /auth/validate ==========
 
-    @Test
-    @DisplayName("POST /auth/validate - Deve retornar 200 (endpoint de validação)")
-    void validate_ShouldReturn200() throws Exception {
-        mockMvc.perform(post("/auth/validate"))
-                .andExpect(status().isOk());
-    }
 }

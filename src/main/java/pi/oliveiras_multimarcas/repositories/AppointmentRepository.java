@@ -19,4 +19,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     boolean existsBySchedulingDateAndSchedulingTime(LocalDate schedulingDate, LocalTime schedulingTime);
 
     List<Appointment> findBySchedulingDateBetweenOrderBySchedulingDateDesc(LocalDate startDate, LocalDate endDate);
+    List<Appointment> findByClientCpf(String cpf);
 }

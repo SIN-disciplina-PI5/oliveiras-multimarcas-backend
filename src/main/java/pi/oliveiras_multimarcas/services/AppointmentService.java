@@ -17,6 +17,7 @@ import pi.oliveiras_multimarcas.repositories.ClientRepository;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,8 @@ public class AppointmentService {
     @Autowired
     private ClientRepository clientRepository; // Para buscar o cliente
 
+    @Autowired
+    private ClientService clientService;
 
     @Transactional
     public AppointmentResponseDTO insert(AppointmentRequestDTO dto) { //
@@ -39,8 +42,8 @@ public class AppointmentService {
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                 .orElseThrow(() -> new NoSuchException("Veículo")); //
 
-        Client client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new NoSuchException("Cliente")); //
+        Optional<Client> client = clientRepository.findByCpf(dto.getClient().getCpf());
+        Client newClient = client.orElseGet(() -> clientService.insert(dto.getClient()));
 
         // 2. Valida conflito de horário
         boolean conflict = appointmentRepository.existsBySchedulingDateAndSchedulingTime(
@@ -49,13 +52,10 @@ public class AppointmentService {
             throw new SchedulingConflictException();
         }
 
-        // 3. Cria a entidade Appointment
-        Appointment appointment = new Appointment(dto, vehicle, client); //
+        if (dto.getStatus() == null) dto.setStatus(AppointmentStatus.PENDING);
 
-        // 4. Define um status padrão (PENDING) se nenhum for enviado
-        if (dto.getStatus() == null) {
-            appointment.setStatus(AppointmentStatus.PENDING); //
-        }
+        // 3. Cria a entidade Appointment
+        Appointment appointment = new Appointment(dto, vehicle, newClient); //
 
         // 5. Salva a entidade no banco
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -75,6 +75,13 @@ public class AppointmentService {
     public List<AppointmentResponseDTO> findAll() {
         return appointmentRepository.findAll().stream()
                 .map(AppointmentResponseDTO::new) // Converte cada Appointment em AppointmentResponseDTO
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentResponseDTO> findByClientCpf(String cpf){
+        return appointmentRepository.findByClientCpf(cpf).stream()
+                .map(AppointmentResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -105,7 +112,6 @@ public class AppointmentService {
         // 3. Atualiza os campos permitidos
         appointment.setSchedulingDate(dto.getSchedulingDate());
         appointment.setSchedulingTime(dto.getSchedulingTime());
-        appointment.setDescription(dto.getDescription());
 
         // 4. Atualiza o status se informado, caso contrário mantém o atual
         if (dto.getStatus() != null) {

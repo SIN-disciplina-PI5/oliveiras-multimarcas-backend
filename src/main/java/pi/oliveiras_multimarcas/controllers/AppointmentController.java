@@ -35,6 +35,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<AppointmentResponseDTO>> findByClientCpf(@RequestParam String cpf){
+        List<AppointmentResponseDTO> appointments = appointmentService.findByClientCpf(cpf);
+        return  ResponseEntity.ok(appointments);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentResponseDTO> findById(@PathVariable UUID id) {
         AppointmentResponseDTO appointment = appointmentService.findById(id);
