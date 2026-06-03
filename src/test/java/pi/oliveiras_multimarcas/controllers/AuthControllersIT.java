@@ -74,7 +74,6 @@ public class AuthControllersIT {
         EmployeeRequestDTO dto = new EmployeeRequestDTO();
         dto.setName("Auth Tester");
         dto.setEmail(testEmail);
-        dto.setPassword(testPassword);
         dto.setContact("81900009999");
         dto.setCpf("99988877766");
         dto.setPosition("Gerente");

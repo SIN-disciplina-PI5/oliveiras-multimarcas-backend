@@ -57,7 +57,6 @@ public class EmployeeControllerIT {
         pi.oliveiras_multimarcas.dto.EmployeeRequestDTO dto = new pi.oliveiras_multimarcas.dto.EmployeeRequestDTO();
         dto.setName("Funcionario Aux");
         dto.setEmail("aux@empresa.com");
-        dto.setPassword("senha_segura_123");
         dto.setContact("81999999999");
         dto.setPosition("Vendedor");
         dto.setCpf("12345678123");
