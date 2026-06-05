@@ -16,9 +16,8 @@ import java.util.UUID;
 public class AppointmentResponseDTO {
     private UUID id;
     private UUID vehicleId;
-    private String vehicleModel; // Denormalizado para conveniência
-    private UUID clientId;
-    private String clientName; // Denormalizado para conveniência
+    private String vehicleModel;
+    private ClientResponseDTO client;
     private LocalDate schedulingDate;
     private LocalTime schedulingTime;
     private AppointmentStatus status;
@@ -27,8 +26,7 @@ public class AppointmentResponseDTO {
         this.id = appointment.getId();
         this.vehicleId = appointment.getVehicle().getId();
         this.vehicleModel = appointment.getVehicle().getModel();
-        this.clientId = appointment.getClient().getId();
-        this.clientName = appointment.getClient().getName();
+        this.client = new ClientResponseDTO(appointment.getClient());
         this.schedulingDate = appointment.getSchedulingDate();
         this.schedulingTime = appointment.getSchedulingTime();
         this.status = appointment.getStatus();

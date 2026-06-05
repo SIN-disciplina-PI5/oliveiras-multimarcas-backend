@@ -112,7 +112,14 @@ public class AppointmentService {
         // 3. Atualiza os campos permitidos
         appointment.setSchedulingDate(dto.getSchedulingDate());
         appointment.setSchedulingTime(dto.getSchedulingTime());
-
+        Client client = clientService.findByEmail(dto.getClient().getEmail());
+        client.setContact(dto.getClient().getContact());
+        client.setCpf(dto.getClient().getCpf());
+        client.setRg(dto.getClient().getRg());
+        client.setName(dto.getClient().getName());
+        client.setAddress(dto.getClient().getAddress());
+        client.setCityState(dto.getClient().getCityState());
+        appointment.setClient(client);
         // 4. Atualiza o status se informado, caso contrário mantém o atual
         if (dto.getStatus() != null) {
             appointment.setStatus(dto.getStatus());
