@@ -38,6 +38,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     EmployeeService employeeService;
 
+    @Autowired
+    PreferencesService preferencesService;
+
     @Override
     public void run(String... args){
 
@@ -204,5 +207,13 @@ public class DatabaseSeeder implements CommandLineRunner {
                 vehicleViewService.insert(vehicleService.findAll().get(1).getId());
             }
         }
+        PreferencesRequestDTO preferencesRequestDTO = new PreferencesRequestDTO();
+        preferencesRequestDTO.setAddress("Rua Nossa Senhora de Fátima, 28 - Jardim São Paulo, Recife - PE");
+        preferencesRequestDTO.setUrlAddress("https://maps.app.goo.gl/cNPEU7RPPjkGY2697");
+        preferencesRequestDTO.setCnpj("62.332.520/0001-59");
+        preferencesRequestDTO.setContact("81994134298");
+        preferencesRequestDTO.setEmail("oliveirasmultimarcasof@gmail.com");
+        preferencesRequestDTO.setUrlInstagram("https://www.instagram.com/oliveiras_multimarcas_of/");
+        preferencesService.updatePreferences(preferencesRequestDTO);
     }
 }
