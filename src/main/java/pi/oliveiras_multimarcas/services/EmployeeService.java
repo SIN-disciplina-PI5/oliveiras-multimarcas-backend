@@ -55,7 +55,11 @@ public class EmployeeService {
         employee.setName(dto.getName());
         employee.setContact(dto.getContact());
         employee.setEmail(dto.getEmail());
-        employee.setPosition(dto.getPosition());
+        if (dto.getPosition()!= null) employee.setPosition(dto.getPosition());
+        employee.setRg(dto.getRg());
+        employee.setBirthDate(dto.getBirthDate());
+        employee.setAddress(dto.getAddress());
+        employee.setCityState(dto.getCityState());
         employee = employeeRepository.save(employee);
         return employee;
     }

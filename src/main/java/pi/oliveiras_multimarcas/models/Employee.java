@@ -5,10 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import pi.oliveiras_multimarcas.dto.EmployeeRequestDTO;
 import pi.oliveiras_multimarcas.models.enums.UserRole;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -16,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Employee extends User {
+public class Employee extends User implements UserDetails {
 
     @Column
     private String position;
@@ -40,6 +44,43 @@ public class Employee extends User {
                 dto.getCityState(),dto.getBirthDate());
         position = dto.getPosition();
         role = UserRole.ADMIN;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_" + role.name())
+        );
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

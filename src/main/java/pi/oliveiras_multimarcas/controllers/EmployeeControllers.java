@@ -51,15 +51,23 @@ public class EmployeeControllers {
         return ResponseEntity.status(201).body(employeeResponseDTO);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> changePassword(@RequestParam UUID id, @RequestBody ChangePasswordRequestDto dto){
-        employeeService.changePassword(id, dto.getPassword());
+    @PatchMapping("/changePassword")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email,@RequestBody ChangePasswordRequestDto dto){
+        Employee employee = employeeService.findByEmail(email);
+        employeeService.changePassword(employee.getId(), dto.getPassword());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateById(@PathVariable UUID id, @RequestBody EmployeeRequestUpdateDTO employeeRequestDTO) {
         Employee employee = employeeService.updateById(id, employeeRequestDTO);
+        EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO(employee);
+        return ResponseEntity.ok(userResponseDTO);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<?> updateMe(@AuthenticationPrincipal String email,@RequestBody EmployeeRequestUpdateDTO employeeRequestDTO) {
+        Employee employee = employeeService.updateById(employeeService.findByEmail(email).getId(), employeeRequestDTO);
         EmployeeResponseDTO userResponseDTO = new EmployeeResponseDTO(employee);
         return ResponseEntity.ok(userResponseDTO);
     }
