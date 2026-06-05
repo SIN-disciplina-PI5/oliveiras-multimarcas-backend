@@ -40,12 +40,6 @@ public class AuthControllers {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody EmployeeRequestDTO dto) {
-        employeeService.insert(dto);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/signin")
     public ResponseEntity<SignInResponseDTO> signin(@Valid @RequestBody SignInRequestDTO dto){
 
@@ -102,15 +96,18 @@ public class AuthControllers {
     @PostMapping("/refresh")
     public ResponseEntity<RefreshTokenResponseDTO> refreshToken( HttpServletRequest authorization) {
         String authHeader = authorization.getHeader("Authorization");
+        System.out.println("authHeader: "+authHeader);
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         String token = authHeader.substring(7);
 
         boolean isTokenValid = jwtUtil.isTokenValid(token, "refresh");
+        System.out.println("isTokenValid: "+isTokenValid);
         if (!isTokenValid) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         boolean isTokenActive = tokenService.isTokenActive(token);
+        System.out.println("isTokenActive: "+isTokenActive);
         if (!isTokenActive) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Map<String, Object> claim = jwtUtil.extractClaims(token, "refresh");

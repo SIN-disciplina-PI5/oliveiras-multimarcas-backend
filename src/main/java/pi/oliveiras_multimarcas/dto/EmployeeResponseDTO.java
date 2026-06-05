@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pi.oliveiras_multimarcas.models.Employee;
-import pi.oliveiras_multimarcas.models.enums.UserRole; 
+import pi.oliveiras_multimarcas.models.enums.UserRole;
 
+import java.util.Date;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -23,6 +24,10 @@ public class EmployeeResponseDTO {
     private String cpf;
     private String profileImage;
     private String contact;
+    private String rg;
+    private String address;
+    private String cityState;
+    private Date birthDate;
 
     public EmployeeResponseDTO(Employee employee) {
         id = employee.getId();
@@ -33,5 +38,9 @@ public class EmployeeResponseDTO {
         cpf = employee.getCpf();
         profileImage = employee.getProfileImage();
         contact = employee.getContact();
+        rg = employee.getRg();
+        address = employee.getAddress();
+        cityState = employee.getCityState();
+        birthDate = employee.getBirthDate();
     }
 }

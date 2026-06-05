@@ -1,6 +1,7 @@
 package pi.oliveiras_multimarcas.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class AppointmentRequestDTO {
 
     @NotNull(message = "A data é obrigatória")
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @FutureOrPresent(message = "A data de agendamento deve ser no presente ou no futuro")
     private LocalDate schedulingDate;
 
     @NotNull(message = "O horário é obrigatório")
