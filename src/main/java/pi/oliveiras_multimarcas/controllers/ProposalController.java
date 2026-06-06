@@ -70,4 +70,24 @@ public class ProposalController {
         Proposal proposal = proposalService.cancel(id);
         return ResponseEntity.ok(new ProposalResponseDTO(proposal));
     }
+
+    @PutMapping("/{id}/contract")
+    public ResponseEntity<ProposalResponseDTO> updateContractUrl(
+            @PathVariable UUID id,
+            @RequestBody String contractUrl) {
+
+        // Tratamento simples caso o front-end envie a string envolvida em aspas JSON duplas ("http://...")
+        if (contractUrl != null && contractUrl.startsWith("\"") && contractUrl.endsWith("\"")) {
+            contractUrl = contractUrl.substring(1, contractUrl.length() - 1);
+        }
+
+        ProposalResponseDTO updatedProposal = proposalService.updateContractUrl(id, contractUrl);
+        return ResponseEntity.ok(updatedProposal);
+    }
+
+    @DeleteMapping("/{id}/cancel-and-remove")
+    public ResponseEntity<Void> cancelAndRemove(@PathVariable UUID id) {
+        proposalService.cancelAndRemove(id);
+        return ResponseEntity.noContent().build();
+    }
 }

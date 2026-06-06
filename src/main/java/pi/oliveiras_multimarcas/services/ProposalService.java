@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pi.oliveiras_multimarcas.dto.ProposalRequestDTO;
+import pi.oliveiras_multimarcas.dto.ProposalResponseDTO;
 import pi.oliveiras_multimarcas.dto.SaleRequestDTO;
 import pi.oliveiras_multimarcas.exceptions.InvalidArguments;
 import pi.oliveiras_multimarcas.exceptions.NoSuchException;
@@ -14,6 +15,7 @@ import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.models.enums.ProposalStatus;
 import pi.oliveiras_multimarcas.repositories.ProposalRepository;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
+import pi.oliveiras_multimarcas.services.S3Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,6 +36,8 @@ public class ProposalService {
     private VehicleRepositorie vehicleRepository;
     @Autowired
     private SaleService saleService;
+    @Autowired
+    private S3Service s3Service;
 
     @Transactional
     public Proposal create(ProposalRequestDTO dto) {
@@ -80,6 +84,17 @@ public class ProposalService {
     @Transactional(readOnly = true)
     public Proposal findById(UUID id) {
         return proposalRepository.findById(id).orElseThrow(() -> new NoSuchException("Proposta"));
+    }
+
+    @Transactional
+    public ProposalResponseDTO updateContractUrl(UUID id, String contractUrl) {
+        Proposal proposal = proposalRepository.findById(id)
+                .orElseThrow(() -> new NoSuchException("Proposta não encontrada com o ID informado."));
+
+        proposal.setContractUrl(contractUrl);
+        Proposal updatedProposal = proposalRepository.save(proposal);
+
+        return new ProposalResponseDTO(updatedProposal);
     }
 
     @Transactional(readOnly = true)
@@ -157,5 +172,18 @@ public class ProposalService {
 
         expiredProposals.forEach(p -> p.setStatus(ProposalStatus.EXPIRED));
         proposalRepository.saveAll(expiredProposals);
+    }
+
+    @Transactional
+    public void cancelAndRemove(UUID id) {
+        Proposal proposal = findById(id);
+
+        // Se existir um contrato, removemos do S3 (assumindo que tem o nome do ficheiro ou URL)
+        if (proposal.getContractUrl() != null) {
+            // Implemente a lógica no seu S3Service para deletar pela URL
+            s3Service.deleteFile(proposal.getContractUrl());
+        }
+
+        proposalRepository.delete(proposal);
     }
 }

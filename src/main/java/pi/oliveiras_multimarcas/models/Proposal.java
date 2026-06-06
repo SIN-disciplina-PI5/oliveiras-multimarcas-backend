@@ -55,4 +55,7 @@ public class Proposal extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProposalStatus status = ProposalStatus.PENDING;
+
+    @Column(name = "contract_url", length = 500)
+    private String contractUrl;
 }

@@ -28,6 +28,7 @@ public class ProposalResponseDTO {
     private LocalDateTime expirationDate;
     private ProposalStatus status;
     private LocalDateTime createdAt;
+    private String contractUrl;
 
     public ProposalResponseDTO(Proposal proposal) {
         this.id = proposal.getId();
@@ -44,5 +45,7 @@ public class ProposalResponseDTO {
         this.expirationDate = proposal.getExpirationDate();
         this.status = proposal.getStatus();
         this.createdAt = proposal.getCreatedAt();
+        this.contractUrl = proposal.getContractUrl();
+
     }
 }
