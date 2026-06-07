@@ -13,6 +13,10 @@ import java.util.UUID;
 public interface ProposalRepository extends JpaRepository<Proposal, UUID> {
     List<Proposal> findByStatus(ProposalStatus status);
     List<Proposal> findByClientId(UUID clientId);
-    List<Proposal> findByStatusAndExpirationDateBefore(ProposalStatus status, LocalDateTime date);
+    List<Proposal> findByStatusAndExpirationDateBefore(ProposalStatus status, LocalDateTime dateTime);
+
+    // Nova consulta adicionada para suportar a filtragem por múltiplos status operacionais
+    List<Proposal> findByStatusIn(List<ProposalStatus> statuses);
+
     long countByStatus(ProposalStatus status);
 }
