@@ -178,12 +178,18 @@ public class ProposalService {
     public void cancelAndRemove(UUID id) {
         Proposal proposal = findById(id);
 
-        // Se existir um contrato, removemos do S3 (assumindo que tem o nome do ficheiro ou URL)
-        if (proposal.getContractUrl() != null) {
-            // Implemente a lógica no seu S3Service para deletar pela URL
-            s3Service.deleteFile(proposal.getContractUrl());
+        // Tenta remover o contrato do S3 apenas se a URL existir
+        if (proposal.getContractUrl() != null && !proposal.getContractUrl().isBlank()) {
+            try {
+                s3Service.deleteFile(proposal.getContractUrl());
+            } catch (Exception e) {
+                // Logamos o erro caso o arquivo não exista no S3 ou falhe,
+                // mas não impedimos a deleção da proposta no banco de dados
+                System.err.println("Aviso: Não foi possível remover o arquivo do S3: " + e.getMessage());
+            }
         }
 
+        // Remove a proposta do banco de dados (funciona para ambas as situações)
         proposalRepository.delete(proposal);
     }
 }
