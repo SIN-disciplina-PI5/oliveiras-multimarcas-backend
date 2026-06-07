@@ -85,4 +85,9 @@ public class VehicleService {
 
         return vehicleRepository.save(vehicle);
     }
+
+    @Transactional(readOnly = true)
+    public List<Vehicle> findAllAvailable() {
+        return vehicleRepository.findByAvailableTrue();
+    }
 }

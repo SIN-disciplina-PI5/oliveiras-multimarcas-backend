@@ -14,4 +14,6 @@ public interface VehicleRepositorie extends JpaRepository<Vehicle, UUID>{
     
     @Query("SELECT v.mark AS mark, COUNT(v) AS brandCount FROM Vehicle v GROUP BY v.mark")
     List<VehicleBrandCount> countCarsByBrand();
+    // Adicione esta linha dentro da sua interface VehicleRepositorie
+    List<Vehicle> findByAvailableTrue();
 }

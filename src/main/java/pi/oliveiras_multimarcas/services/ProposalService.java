@@ -15,7 +15,6 @@ import pi.oliveiras_multimarcas.models.Vehicle;
 import pi.oliveiras_multimarcas.models.enums.ProposalStatus;
 import pi.oliveiras_multimarcas.repositories.ProposalRepository;
 import pi.oliveiras_multimarcas.repositories.VehicleRepositorie;
-import pi.oliveiras_multimarcas.services.S3Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -55,11 +54,9 @@ public class ProposalService {
         proposal.setInstallments(dto.getInstallments());
         proposal.setObservations(dto.getObservations());
 
-        // Regra de Juros (Definido pelo DTO ou fixado em 2% ao mês)
         BigDecimal interestRate = dto.getInterestRate() != null ? dto.getInterestRate() : new BigDecimal("0.02");
         proposal.setInterestRate(interestRate);
 
-        // Cálculos financeiros (Juros Simples para exemplo)
         BigDecimal amountToFinance = vehicle.getPrice().subtract(dto.getEntryValue());
         if (amountToFinance.compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidArguments("Valor de entrada maior que o valor do veículo.");
@@ -74,7 +71,6 @@ public class ProposalService {
         proposal.setInstallmentValue(installmentValue);
         proposal.setTotalValue(totalValue);
 
-        // Expira em 7 dias
         proposal.setExpirationDate(LocalDateTime.now().plusDays(7));
         proposal.setStatus(ProposalStatus.PENDING);
 
@@ -99,7 +95,7 @@ public class ProposalService {
 
     @Transactional(readOnly = true)
     public List<Proposal> findAll() {
-        return proposalRepository.findAll();
+        return proposalRepository.findByStatusIn(List.of(ProposalStatus.PENDING, ProposalStatus.ACCEPTED));
     }
 
     @Transactional(readOnly = true)
@@ -119,19 +115,15 @@ public class ProposalService {
 
         proposal.setStatus(ProposalStatus.ACCEPTED);
 
-        // 1. Marcar veículo como vendido/indisponível
+        // O Veículo fica INDISPONÍVEL ao aceitar a proposta
         Vehicle vehicle = proposal.getVehicle();
         vehicle.setAvailable(false);
         vehicleRepository.save(vehicle);
 
-        // 2. Gerar a Venda Oficial (Sale)
         SaleRequestDTO saleDto = new SaleRequestDTO();
         saleDto.setClient(proposal.getClient().getId());
         saleDto.setVehicle(vehicle.getId());
         saleService.insert(saleDto);
-
-        // 3. Cancelar outras propostas pendentes para o mesmo veículo (Opcional, mas recomendado)
-        // Lógica a ser implementada caso deseje.
 
         return proposalRepository.save(proposal);
     }
@@ -141,6 +133,14 @@ public class ProposalService {
         Proposal proposal = findById(id);
         validateProposalIsPending(proposal);
         proposal.setStatus(ProposalStatus.REJECTED);
+
+        // Garante que o veículo volta a ficar disponível se rejeitar
+        Vehicle vehicle = proposal.getVehicle();
+        if (vehicle != null && !vehicle.isAvailable()) {
+            vehicle.setAvailable(true);
+            vehicleRepository.save(vehicle);
+        }
+
         return proposalRepository.save(proposal);
     }
 
@@ -149,6 +149,14 @@ public class ProposalService {
         Proposal proposal = findById(id);
         validateProposalIsPending(proposal);
         proposal.setStatus(ProposalStatus.CANCELED);
+
+        // Garante que o veículo volta a ficar disponível se cancelar
+        Vehicle vehicle = proposal.getVehicle();
+        if (vehicle != null && !vehicle.isAvailable()) {
+            vehicle.setAvailable(true);
+            vehicleRepository.save(vehicle);
+        }
+
         return proposalRepository.save(proposal);
     }
 
@@ -163,7 +171,6 @@ public class ProposalService {
         }
     }
 
-    // Cron job para rodar todos os dias à meia-noite e expirar propostas vencidas
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void expireOldProposals() {
@@ -178,18 +185,29 @@ public class ProposalService {
     public void cancelAndRemove(UUID id) {
         Proposal proposal = findById(id);
 
-        // Tenta remover o contrato do S3 apenas se a URL existir
+        // 🟢 NOVO: Se a proposta havia sido aceita (o que tornou o veículo indisponível),
+        // devemos torná-lo DISPONÍVEL novamente antes de deletar a proposta.
+        if (proposal.getStatus() == ProposalStatus.ACCEPTED) {
+            Vehicle vehicle = proposal.getVehicle();
+            if (vehicle != null) {
+                vehicle.setAvailable(true);
+                vehicleRepository.save(vehicle);
+            }
+
+            // Dica de Integridade: Se o saleService tiver um método para deletar a venda pelo ID do veículo ou cliente,
+            // seria o ideal chamá-lo aqui para não deixar um registro fantasma de "Sale" no dashboard.
+        }
+
+        // Remove do S3
         if (proposal.getContractUrl() != null && !proposal.getContractUrl().isBlank()) {
             try {
                 s3Service.deleteFile(proposal.getContractUrl());
             } catch (Exception e) {
-                // Logamos o erro caso o arquivo não exista no S3 ou falhe,
-                // mas não impedimos a deleção da proposta no banco de dados
                 System.err.println("Aviso: Não foi possível remover o arquivo do S3: " + e.getMessage());
             }
         }
 
-        // Remove a proposta do banco de dados (funciona para ambas as situações)
+        // Remove a proposta permanentemente
         proposalRepository.delete(proposal);
     }
 }

@@ -14,6 +14,7 @@ import pi.oliveiras_multimarcas.services.VehicleViewService;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -85,6 +86,14 @@ public class VehicleControllers {
     public ResponseEntity<Void> carViewed(@PathVariable UUID id){
         vehicleViewService.insert(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<VehicleResponseDTO>> findAllAvailable() {
+        List<VehicleResponseDTO> list = vehicleService.findAllAvailable().stream()
+                .map(VehicleResponseDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
     }
 }
 
