@@ -25,6 +25,8 @@ public class VehicleResponseDTO {
     private String description;
     private int mileage;
     private String mark;
+    private String fuel;
+    private String transmission;
 
     public VehicleResponseDTO(Vehicle vehicle){
         this.id = vehicle.getId();
@@ -39,6 +41,8 @@ public class VehicleResponseDTO {
         this.description = vehicle.getDescription();
         this.mileage = vehicle.getMileage();
         this.mark = vehicle.getMark();
+        this.fuel = vehicle.getFuel();
+        this.transmission = vehicle.getTransmission();
 
     }
 }

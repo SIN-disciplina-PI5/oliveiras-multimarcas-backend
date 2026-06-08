@@ -33,7 +33,8 @@ public class VehicleViewService {
 
         List<Vehicle> vehicles = new ArrayList<Vehicle>();
         for (String id : ids) {
-            vehicles.add(vehicleService.findyById(UUID.fromString(id)));
+            Vehicle vehicle = vehicleService.findyById(UUID.fromString(id));
+            if (vehicle.isAvailable()) vehicles.add(vehicle);
         }
         return vehicles;
     }

@@ -58,7 +58,10 @@ public class Vehicle {
             orphanRemoval = true
     )
     private List<VehicleView> views;
+    @Column
     private boolean available = true;
+    private String transmission;
+    private String fuel;
 
     public Vehicle(VehicleRequestDTO dto){
         this.model = dto.getModel();
@@ -89,6 +92,8 @@ public class Vehicle {
         }
         this.mileage = dto.getMileage();
         this.mark = dto.getMark();
+        this.fuel = dto.getFuel();
+        this.transmission = dto.getTransmission();
     }
 
     public void setModelYear(int modelYear){
