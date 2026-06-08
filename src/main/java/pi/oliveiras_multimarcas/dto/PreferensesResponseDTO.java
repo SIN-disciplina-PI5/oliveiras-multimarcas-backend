@@ -25,6 +25,6 @@ public class PreferensesResponseDTO {
         contact = dto.getContact();
         email = dto.getEmail();
         address = dto.getAddress();
-        urlAddress = dto.getAddress();
+        urlAddress = dto.getUrlAddress();
     }
 }
