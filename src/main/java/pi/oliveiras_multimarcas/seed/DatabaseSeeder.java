@@ -58,6 +58,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle1.setDescription("Sedan médio com ótimo desempenho, conforto e baixo consumo de combustível.");
         vehicle1.setMileage(32000);
         vehicle1.setMark("Honda");
+        vehicle1.setFuel("flex");
+        vehicle1.setTransmission("automático");
 
         vehicleService.insert(vehicle1);
 
@@ -75,6 +77,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle2.setDescription("Versão híbrida do Corolla, unindo eficiência energética e conforto premium.");
         vehicle2.setMileage(21000);
         vehicle2.setMark("Toyota");
+        vehicle2.setFuel("flex");
+        vehicle2.setTransmission("automático");
 
         vehicleService.insert(vehicle2);
 
@@ -92,6 +96,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         vehicle3.setDescription("SUV robusto com tração 4x4 e interior sofisticado, ideal para viagens longas.");
         vehicle3.setMileage(12000);
         vehicle3.setMark("Jeep");
+        vehicle3.setFuel("flex");
+        vehicle3.setTransmission("automático");
 
         vehicleService.insert(vehicle3);
 

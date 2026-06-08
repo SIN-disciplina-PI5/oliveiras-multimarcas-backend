@@ -37,4 +37,7 @@ public class VehicleRequestDTO {
 
     @NotBlank(message = "A marca é obrigatória")
     private String mark;
+
+    private String fuel;
+    private String transmission;
 }

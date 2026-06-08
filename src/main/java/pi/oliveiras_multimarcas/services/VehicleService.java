@@ -49,11 +49,9 @@ public class VehicleService {
 
     @Transactional
     public void delete(UUID id){
-        if(!vehicleRepository.existsById(id)){
-            throw new NoSuchException("Veículo");
-        }
-
-        vehicleRepository.deleteById(id);
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(()-> new NoSuchException("Vehicle"));
+        vehicle.setAvailable(false);
+        vehicleRepository.save(vehicle);
     }
 
     @Transactional
@@ -68,6 +66,8 @@ public class VehicleService {
         vehicle.setMark(dto.getMark());
         vehicle.setMileage(dto.getMileage());
         vehicle.setModelYear(dto.getModelYear());
+        vehicle.setFuel(dto.getFuel());
+        vehicle.setTransmission(dto.getTransmission());
         Set<String> existingUrls = vehicle.getUrl_images()
                 .stream()
                 .map(ImageVehicle::getUrl)
