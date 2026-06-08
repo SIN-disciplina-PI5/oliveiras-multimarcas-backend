@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error").permitAll()
-                        .requestMatchers( HttpMethod.POST,"/auth/signin").permitAll()
+                        .requestMatchers( HttpMethod.POST,"/auth/signin", "/auth/refresh").permitAll()
                         .requestMatchers( HttpMethod.POST,"/appointments").permitAll()
                         .requestMatchers( HttpMethod.POST, "/clients").permitAll()
                         .requestMatchers(HttpMethod.POST, "/vehicles/view/**", "/vehicles/mostPopular").permitAll()
@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
